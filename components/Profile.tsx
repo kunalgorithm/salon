@@ -26,12 +26,10 @@ const Profile = () => {
       </div>
     );
   return (
-    <div>
-      <div>
-        <span>Joined as</span>
+    <div style={{ textAlign: "center", marginLeft: "20px" }}>
+      <span>Joined as</span>
 
-        <h1>{data.me.name}</h1>
-      </div>
+      <h1>{data.me.name}</h1>
     </div>
   );
 };

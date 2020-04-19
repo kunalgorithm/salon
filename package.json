@@ -17,6 +17,7 @@
     "migrate:up": "prisma migrate up --experimental"
   },
   "dependencies": {
+    "@ant-design/icons": "^4.0.6",
     "@apollo/react-hooks": "^3.1.0",
     "@apollo/react-ssr": "^3.1.0",
     "@prisma/client": "^2.0.0-beta.2",

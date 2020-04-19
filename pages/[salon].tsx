@@ -40,6 +40,6 @@ const Page = ({ id }) => {
 };
 
 Page.getInitialProps = (ctx) => {
-  return { id: ctx.query.salon };
+  return { id: ctx.query ? ctx.query.salon : undefined };
 };
 export default withApollo(Page);

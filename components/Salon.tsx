@@ -6,6 +6,7 @@ import Join from "./Join";
 
 import { Row, Col } from "antd";
 import Profile from "./Profile";
+import { UpCircleOutlined } from "@ant-design/icons";
 
 export default ({ data }: { data: { salon: Salon; me: Player } }) => {
   return (
@@ -16,8 +17,10 @@ export default ({ data }: { data: { salon: Salon; me: Player } }) => {
       ) : (
         <div>
           <Row>
-            <Col span={16}>
-              <div>playing area</div>
+            <Col span={16} style={{ boxShadow: "1px 1px 13px 3px black" }}>
+              <div>
+                <UpCircleOutlined style={{ fontSize: "2em" }} rotate={45} />
+              </div>
             </Col>
             <Col span={8}>
               <Row>
