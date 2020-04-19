@@ -32,11 +32,7 @@ const Page = ({ id }) => {
         <h3>This salon has expired or does not exist 🤔</h3>
       </div>
     );
-  return (
-    <div>
-      <Salon data={data} />
-    </div>
-  );
+  return <Salon data={data} />;
 };
 
 Page.getInitialProps = (ctx) => {
