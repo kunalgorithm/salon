@@ -9,9 +9,13 @@ import Profile from "./Profile";
 import { UpCircleOutlined } from "@ant-design/icons";
 import { useState } from "react";
 
-export default ({ data }: { data: { salon: Salon; me: Player } }) => {
+export default ({
+  data,
+}: {
+  data: { salon: Salon & { players: Player[] }; me: Player };
+}) => {
   const [position, setPosition] = useState({ x: 50, y: 100 });
-  const [rotate, setRotate] = useState(0);
+  const [rotate, setRotate] = useState(90);
   const speed = 3;
   const handleKeyPress = (event) => {
     if (event.key === "ArrowLeft") setRotate(rotate - 4);
@@ -21,7 +25,6 @@ export default ({ data }: { data: { salon: Salon; me: Player } }) => {
         x: position.x + speed * Math.cos(((rotate - 90) * Math.PI) / 180),
         y: position.y + speed * Math.sin(((rotate - 90) * Math.PI) / 180),
       });
-    // if (event.key === "ArrowDown") setRotate(rotate -1)
   };
   return (
     <>
@@ -54,7 +57,7 @@ export default ({ data }: { data: { salon: Salon; me: Player } }) => {
           </Col>
           <Col span={8}>
             <Row>
-              <Profile />
+              <Profile data={data} />
             </Row>
           </Col>
         </Row>

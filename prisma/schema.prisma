@@ -14,15 +14,20 @@ generator client {
 model Player {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
+  updatedAt DateTime? @default(now())
   email     String?  
   name      String
   password String?
+  x_location Float @default(50)
+  y_location Float @default(100)
+  rotation Float @default(90)
 
 }
 
 model Salon {
   id        String      @id @default(cuid())
   createdAt DateTime @default(now())
+  updatedAt DateTime? @default(now())
   title     String  
   players    Player[]
 

@@ -15,8 +15,8 @@ function Join() {
 
   const [joinMutation, { loading, error, data, client }] = useMutation(
     gql`
-      mutation signup($name: String!) {
-        signup(name: $name) {
+      mutation join($name: String!, $salonId: String!) {
+        join(name: $name, salonId: $salonId) {
           name
         }
       }
@@ -40,9 +40,15 @@ function Join() {
 
             try {
               await client.resetStore();
+
+              if (!name.value) {
+                message.error("You must enter a name to join.");
+                return;
+              }
               const result: { data?: any } = await joinMutation({
                 variables: {
                   name: name.value,
+                  salonId: router.query.salon,
                 },
               });
 

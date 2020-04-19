@@ -11,6 +11,7 @@ export const typeDefs = gql`
   type Salon {
     id: ID!
     title: String!
+    players: [Player!]!
   }
 
   type Query {
@@ -22,7 +23,7 @@ export const typeDefs = gql`
   }
 
   type Mutation {
-    signup(name: String!): Player!
+    join(name: String!, salonId: String!): Player!
     login(email: String!, password: String!): Player!
     signOut: Boolean!
     createSalon(title: String!): Salon!

@@ -3,19 +3,14 @@ import React from "react";
 import Profile from "./Profile";
 import { Row, Col } from "antd";
 import Users from "./Users";
-import Posts from "./CreateSalon";
+import CreateSalon from "./CreateSalon";
 
 export default function Dashboard() {
   return (
     <div>
       <Row>
-        <Col span={16}>
-          <Posts />
-        </Col>
-        <Col span={8}>
-          <Row>
-            <Profile />
-          </Row>
+        <Col span={14}>
+          <CreateSalon />
         </Col>
       </Row>
       <style jsx>{`

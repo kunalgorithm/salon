@@ -16,6 +16,10 @@ const Page = ({ id }) => {
         salon(id: $id) {
           id
           title
+          players {
+            id
+            name
+          }
         }
         me {
           id

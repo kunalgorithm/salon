@@ -75,11 +75,21 @@ export const resolvers = {
         },
       });
     },
-    async signup(_parent, args, ctx: Context, _info): Promise<Player> {
+    async join(
+      _parent,
+      { salonId, name }: { salonId: string; name: string },
+      ctx: Context,
+      _info
+    ): Promise<Player> {
       const player = await ctx.prisma.player.create({
         data: {
-          name: args.name,
+          name: name,
         },
+      });
+
+      await ctx.prisma.salon.update({
+        where: { id: salonId },
+        data: { players: { connect: { id: player.id } } },
       });
       const token = jwt.sign(
         { name: player.name, id: player.id, time: new Date() },
@@ -102,41 +112,6 @@ export const resolvers = {
       return player;
     },
 
-    async login(
-      _parent,
-      args: { email: string; password: string },
-      ctx: Context,
-      _info
-    ) {
-      const user = await ctx.prisma.player.findOne({
-        where: { email: args.email },
-      });
-
-      if (user && validPassword(user, args.password)) {
-        const token = jwt.sign(
-          { email: user.email, id: user.id, time: new Date() },
-          JWT_SECRET,
-          {
-            expiresIn: "6h",
-          }
-        );
-
-        ctx.res.setHeader(
-          "Set-Cookie",
-          cookie.serialize("token", token, {
-            httpOnly: true,
-            maxAge: 6 * 60 * 60,
-            path: "/",
-            sameSite: "lax",
-            secure: process.env.NODE_ENV === "production",
-          })
-        );
-
-        return user;
-      }
-
-      throw new UserInputError("Invalid email and password combination");
-    },
     async signOut(_parent, _args, ctx: Context, _info) {
       ctx.res.setHeader(
         "Set-Cookie",
@@ -152,5 +127,9 @@ export const resolvers = {
       return true;
     },
   },
-  Player: {},
+  Salon: {
+    async players({ id }, _args, ctx: Context, _info) {
+      return await ctx.prisma.salon.findOne({ where: { id } }).players();
+    },
+  },
 };
