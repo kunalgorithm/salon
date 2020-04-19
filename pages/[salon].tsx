@@ -40,7 +40,7 @@ const Page = ({ id }) => {
   const [join] = useMutation(JOIN_MUTATION);
   if (loading) return <div>Loading...</div>;
 
-  if (data && data.me.salonId !== id) {
+  if (data && data.me && data.me.salonId !== id) {
     join({ variables: { salonId: id } });
   }
   if (!data || !data.salon)

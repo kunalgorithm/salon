@@ -15,12 +15,10 @@ export default ({
   data: { salon: Salon & { players: Player[] }; me: Player };
 }) => {
   const [position, setPosition] = useState({
-    x: data.me.x_position ? data.me.x_position : 50,
-    y: data.me.y_position ? data.me.y_position : 100,
+    x: 50,
+    y: 100,
   });
-  const [rotation, setRotation] = useState(
-    data.me.rotation ? data.me.rotation : 90
-  );
+  const [rotation, setRotation] = useState(90);
   const speed = 3;
 
   const [move] = useMutation(
@@ -44,22 +42,26 @@ export default ({
   );
 
   const handleKeyDown = (event) => {
-    if (event.key === "ArrowRight") setPosition({
-      x: position.x + speed,
-      y: position.y,
-    });
-    else if (event.key === "ArrowLeft") setPosition({
-      x: position.x - speed,
-      y: position.y,
-    });
-    if (event.key === "ArrowUp") setPosition({
-      x: position.x,
-      y: position.y - speed,
-    });
-    else if (event.key === "ArrowDown") setPosition({
-      x: position.x,
-      y: position.y + speed,
-    });
+    if (event.key === "ArrowRight")
+      setPosition({
+        x: position.x + speed,
+        y: position.y,
+      });
+    else if (event.key === "ArrowLeft")
+      setPosition({
+        x: position.x - speed,
+        y: position.y,
+      });
+    if (event.key === "ArrowUp")
+      setPosition({
+        x: position.x,
+        y: position.y - speed,
+      });
+    else if (event.key === "ArrowDown")
+      setPosition({
+        x: position.x,
+        y: position.y + speed,
+      });
 
     move({
       variables: {
