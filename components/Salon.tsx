@@ -13,14 +13,24 @@ export default ({ data }: { data: { salon: Salon; me: Player } }) => {
   const [position, setPosition] = useState({ x: 50, y: 100 });
   const [rotate, setRotate] = useState(0);
   const speed = 3;
-  const handleKeyPress = (event) => {
-    if (event.key === "ArrowLeft") setRotate(rotate - 4);
-    if (event.key === "ArrowRight") setRotate(rotate + 4);
-    if (event.key === "ArrowUp")
-      setPosition({
-        x: position.x + speed * Math.cos(((rotate - 90) * Math.PI) / 180),
-        y: position.y + speed * Math.sin(((rotate - 90) * Math.PI) / 180),
-      });
+  const handleKeyDown = (event) => {
+    if (event.key === "ArrowRight") setPosition({
+      x: position.x + speed,
+      y: position.y,
+    });
+    else if (event.key === "ArrowLeft") setPosition({
+      x: position.x - speed,
+      y: position.y,
+    });
+    if (event.key === "ArrowUp") setPosition({
+      x: position.x,
+      y: position.y - speed,
+    });
+    else if (event.key === "ArrowDown") setPosition({
+      x: position.x,
+      y: position.y + speed,
+    });
+
     // if (event.key === "ArrowDown") setRotate(rotate -1)
   };
   return (
@@ -32,7 +42,7 @@ export default ({ data }: { data: { salon: Salon; me: Player } }) => {
         <Row
           style={{ height: "70vh" }}
           tabIndex={0}
-          onKeyDown={handleKeyPress}
+          onKeyDown={handleKeyDown}
           id="game"
         >
           <Col
