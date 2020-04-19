@@ -10,17 +10,18 @@ import Link from "next/link";
 import { Input, Button, message, Row, Col } from "antd";
 import Field from "../components/Field";
 
+export const JOIN_MUTATION = gql`
+  mutation join($name: String, $salonId: String!) {
+    join(name: $name, salonId: $salonId) {
+      name
+    }
+  }
+`;
 function Join() {
   const router = useRouter();
 
   const [joinMutation, { loading, error, data, client }] = useMutation(
-    gql`
-      mutation signup($name: String!) {
-        signup(name: $name) {
-          name
-        }
-      }
-    `
+    JOIN_MUTATION
   );
 
   return (
@@ -40,9 +41,15 @@ function Join() {
 
             try {
               await client.resetStore();
+
+              if (!name.value) {
+                message.error("You must enter a name to join.");
+                return;
+              }
               const result: { data?: any } = await joinMutation({
                 variables: {
                   name: name.value,
+                  salonId: router.query.salon,
                 },
               });
 

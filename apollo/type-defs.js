@@ -6,11 +6,17 @@ export const typeDefs = gql`
     email: String
     name: String
     password: String
+    x_position: Float
+    y_position: Float
+    rotation: Float
+    salonId: String
+    salon: Salon
   }
 
   type Salon {
     id: ID!
     title: String!
+    players: [Player!]!
   }
 
   type Query {
@@ -22,9 +28,10 @@ export const typeDefs = gql`
   }
 
   type Mutation {
-    signup(name: String!): Player!
+    join(name: String, salonId: String!): Player!
     login(email: String!, password: String!): Player!
     signOut: Boolean!
     createSalon(title: String!): Salon!
+    move(x_position: Float!, y_position: Float!, rotation: Float!): Player!
   }
 `;

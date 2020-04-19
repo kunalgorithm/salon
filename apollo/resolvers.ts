@@ -33,7 +33,7 @@ export const resolvers = {
 
       if (token) {
         try {
-          const { id, email } = jwt.verify(token, JWT_SECRET);
+          const { id, name } = jwt.verify(token, JWT_SECRET);
 
           return await ctx.prisma.player.findOne({ where: { id } });
         } catch {
@@ -75,12 +75,49 @@ export const resolvers = {
         },
       });
     },
-    async signup(_parent, args, ctx: Context, _info): Promise<Player> {
-      const player = await ctx.prisma.player.create({
+    async move(
+      _parent,
+      args: { x_position: number; y_position: number; rotation: number },
+      ctx: Context,
+      _info
+    ): Promise<Player> {
+      const { token } = cookie.parse(ctx.req.headers.cookie ?? "");
+      const { id, name } = jwt.verify(token, JWT_SECRET);
+      if (!id)
+        throw new AuthenticationError(
+          "You must join this salon to move your player."
+        );
+
+      return await ctx.prisma.player.update({
+        where: { id },
         data: {
-          name: args.name,
+          ...args,
         },
       });
+    },
+    async join(
+      _parent,
+      { salonId, name }: { salonId: string; name?: string },
+      ctx: Context,
+      _info
+    ): Promise<Player> {
+      if (!name) {
+        const { token } = cookie.parse(ctx.req.headers.cookie ?? "");
+        const { id, name } = jwt.verify(token, JWT_SECRET);
+        await ctx.prisma.salon.update({
+          where: { id: salonId },
+          data: { players: { connect: { id } } },
+        });
+        return ctx.prisma.player.findOne({ where: { id } });
+      }
+
+      const player = await ctx.prisma.player.create({
+        data: {
+          name: name,
+          salon: { connect: { id: salonId } },
+        },
+      });
+
       const token = jwt.sign(
         { name: player.name, id: player.id, time: new Date() },
         JWT_SECRET,
@@ -102,41 +139,6 @@ export const resolvers = {
       return player;
     },
 
-    async login(
-      _parent,
-      args: { email: string; password: string },
-      ctx: Context,
-      _info
-    ) {
-      const user = await ctx.prisma.player.findOne({
-        where: { email: args.email },
-      });
-
-      if (user && validPassword(user, args.password)) {
-        const token = jwt.sign(
-          { email: user.email, id: user.id, time: new Date() },
-          JWT_SECRET,
-          {
-            expiresIn: "6h",
-          }
-        );
-
-        ctx.res.setHeader(
-          "Set-Cookie",
-          cookie.serialize("token", token, {
-            httpOnly: true,
-            maxAge: 6 * 60 * 60,
-            path: "/",
-            sameSite: "lax",
-            secure: process.env.NODE_ENV === "production",
-          })
-        );
-
-        return user;
-      }
-
-      throw new UserInputError("Invalid email and password combination");
-    },
     async signOut(_parent, _args, ctx: Context, _info) {
       ctx.res.setHeader(
         "Set-Cookie",
@@ -152,5 +154,14 @@ export const resolvers = {
       return true;
     },
   },
-  Player: {},
+  Salon: {
+    async players(parent, _args, ctx: Context, _info) {
+      const { token } = cookie.parse(ctx.req.headers.cookie ?? "");
+      const { id, name } = jwt.verify(token, JWT_SECRET);
+      const players = await ctx.prisma.salon
+        .findOne({ where: { id: parent.id } })
+        .players({ where: { NOT: { id } } });
+      return players.filter((p) => p.id !== id);
+    },
+  },
 };

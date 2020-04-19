@@ -4,15 +4,45 @@ import gql from "graphql-tag";
 
 import Join from "./Join";
 
-import { Row, Col } from "antd";
+import { Row, Col, Popover } from "antd";
 import Profile from "./Profile";
 import { UpCircleOutlined } from "@ant-design/icons";
 import { useState } from "react";
 
-export default ({ data }: { data: { salon: Salon; me: Player } }) => {
-  const [position, setPosition] = useState({ x: 50, y: 100 });
-  const [rotate, setRotate] = useState(0);
+export default ({
+  data,
+}: {
+  data: { salon: Salon & { players: Player[] }; me: Player };
+}) => {
+  const [position, setPosition] = useState({
+    x: data.me.x_position ? data.me.x_position : 50,
+    y: data.me.y_position ? data.me.y_position : 100,
+  });
+  const [rotation, setRotation] = useState(
+    data.me.rotation ? data.me.rotation : 90
+  );
   const speed = 3;
+
+  const [move] = useMutation(
+    gql`
+      mutation move(
+        $x_position: Float!
+        $y_position: Float!
+        $rotation: Float!
+      ) {
+        move(
+          x_position: $x_position
+          y_position: $y_position
+          rotation: $rotation
+        ) {
+          x_position
+          y_position
+          rotation
+        }
+      }
+    `
+  );
+
   const handleKeyDown = (event) => {
     if (event.key === "ArrowRight") setPosition({
       x: position.x + speed,
@@ -31,8 +61,15 @@ export default ({ data }: { data: { salon: Salon; me: Player } }) => {
       y: position.y + speed,
     });
 
-    // if (event.key === "ArrowDown") setRotate(rotate -1)
+    move({
+      variables: {
+        x_position: position.x,
+        y_position: position.y,
+        rotation: rotation,
+      },
+    });
   };
+
   return (
     <>
       <h2>Welcome to {data.salon.title}</h2>
@@ -54,17 +91,35 @@ export default ({ data }: { data: { salon: Salon; me: Player } }) => {
               <UpCircleOutlined
                 style={{
                   fontSize: "2em",
-                  position: "relative",
+                  position: "absolute",
                   left: `${position.x}px`,
                   top: `${position.y}px`,
                 }}
-                rotate={rotate}
+                rotate={rotation}
               />
+              {data.salon.players.map((player) => (
+                <Popover content={player.name} key={player.id}>
+                  <UpCircleOutlined
+                    style={{
+                      fontSize: "2em",
+                      position: "absolute",
+                      left: `${player.x_position}px`,
+                      top: `${player.y_position}px`,
+                      color:
+                        Math.abs(player.x_position - position.x) < 50 &&
+                        Math.abs(player.y_position - position.y) < 50
+                          ? "blue"
+                          : "slategray",
+                    }}
+                    rotate={player.rotation}
+                  />
+                </Popover>
+              ))}
             </div>
           </Col>
           <Col span={8}>
             <Row>
-              <Profile />
+              <Profile data={data} />
             </Row>
           </Col>
         </Row>
