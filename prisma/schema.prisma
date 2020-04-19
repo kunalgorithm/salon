@@ -11,19 +11,19 @@ generator client {
   binaryTargets = ["native"]
 }
 
-model User {
+model Player {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   email     String   @unique
   name      String?
-  password String
-  // role      Role     @default(USER)
-  posts     Post[]
+  password String?
+
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
+model Salon {
+  id        String      @id @default(cuid())
   createdAt DateTime @default(now())
-  title     String   
+  title     String  
+  players    Player[]
 
 }

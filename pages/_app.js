@@ -16,7 +16,7 @@ class MyApp extends App {
     return (
       <>
         <Head>
-          <title>GraphQL Fullstack Web App</title>
+          <title>Salon</title>
         </Head>
 
         <Layout style={{ height: "100vh" }}>
@@ -50,9 +50,9 @@ class MyApp extends App {
             <Component {...pageProps} />
           </Content>
 
-          <Footer style={{ textAlign: "center" }}>
+          {/* <Footer style={{ textAlign: "center" }}>
             <Copyright />
-          </Footer>
+          </Footer> */}
         </Layout>
       </>
     );

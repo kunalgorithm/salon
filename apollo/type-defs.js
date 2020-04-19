@@ -1,28 +1,30 @@
 import gql from "graphql-tag";
 
 export const typeDefs = gql`
-  type User {
+  type Player {
     id: ID!
     email: String!
     name: String
     password: String!
-    posts: [Post!]!
   }
-  type Post {
+
+  type Salon {
     id: ID!
     title: String!
   }
 
   type Query {
-    users: [User!]!
-    user(email: String!): User!
-    me: User
+    me: Player
+    player: Player
+    players: [Player!]!
+    salon: Salon
+    salons: [Salon!]!
   }
 
   type Mutation {
-    signup(email: String!, name: String!, password: String!): User!
-    login(email: String!, password: String!): User!
+    signup(email: String!, name: String!, password: String!): Player!
+    login(email: String!, password: String!): Player!
     signOut: Boolean!
-    createPost(title: String!): Post!
+    createSalon(title: String!): Salon!
   }
 `;
