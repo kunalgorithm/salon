@@ -3,11 +3,12 @@ import Salon from "../components/Salon";
 
 import React from "react";
 
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery, useMutation } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 
 import { Input, Button } from "antd";
 import Link from "next/link";
+import { JOIN_MUTATION } from "../components/Join";
 
 const Page = ({ id }) => {
   const { loading, error, data, client } = useQuery(
@@ -19,17 +20,29 @@ const Page = ({ id }) => {
           players {
             id
             name
+            x_position
+            y_position
+            rotation
           }
         }
         me {
           id
           name
+          x_position
+          y_position
+          rotation
+          salonId
         }
       }
     `,
-    { variables: { id } }
+    { variables: { id }, pollInterval: 2500 }
   );
+  const [join] = useMutation(JOIN_MUTATION);
   if (loading) return <div>Loading...</div>;
+
+  if (data && data.me.salonId !== id) {
+    join({ variables: { salonId: id } });
+  }
   if (!data || !data.salon)
     return (
       <div>

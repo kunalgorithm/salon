@@ -10,17 +10,18 @@ import Link from "next/link";
 import { Input, Button, message, Row, Col } from "antd";
 import Field from "../components/Field";
 
+export const JOIN_MUTATION = gql`
+  mutation join($name: String, $salonId: String!) {
+    join(name: $name, salonId: $salonId) {
+      name
+    }
+  }
+`;
 function Join() {
   const router = useRouter();
 
   const [joinMutation, { loading, error, data, client }] = useMutation(
-    gql`
-      mutation join($name: String!, $salonId: String!) {
-        join(name: $name, salonId: $salonId) {
-          name
-        }
-      }
-    `
+    JOIN_MUTATION
   );
 
   return (

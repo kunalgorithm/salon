@@ -18,9 +18,11 @@ model Player {
   email     String?  
   name      String
   password String?
-  x_location Float @default(50)
-  y_location Float @default(100)
+  x_position Float @default(50)
+  y_position Float @default(100)
   rotation Float @default(90)
+  salonId  String
+  salon Salon     @relation(fields: [salonId], references: [id])
 
 }
 

@@ -33,7 +33,7 @@ export const resolvers = {
 
       if (token) {
         try {
-          const { id, email } = jwt.verify(token, JWT_SECRET);
+          const { id, name } = jwt.verify(token, JWT_SECRET);
 
           return await ctx.prisma.player.findOne({ where: { id } });
         } catch {
@@ -75,22 +75,49 @@ export const resolvers = {
         },
       });
     },
-    async join(
+    async move(
       _parent,
-      { salonId, name }: { salonId: string; name: string },
+      args: { x_position: number; y_position: number; rotation: number },
       ctx: Context,
       _info
     ): Promise<Player> {
+      const { token } = cookie.parse(ctx.req.headers.cookie ?? "");
+      const { id, name } = jwt.verify(token, JWT_SECRET);
+      if (!id)
+        throw new AuthenticationError(
+          "You must join this salon to move your player."
+        );
+
+      return await ctx.prisma.player.update({
+        where: { id },
+        data: {
+          ...args,
+        },
+      });
+    },
+    async join(
+      _parent,
+      { salonId, name }: { salonId: string; name?: string },
+      ctx: Context,
+      _info
+    ): Promise<Player> {
+      if (!name) {
+        const { token } = cookie.parse(ctx.req.headers.cookie ?? "");
+        const { id, name } = jwt.verify(token, JWT_SECRET);
+        await ctx.prisma.salon.update({
+          where: { id: salonId },
+          data: { players: { connect: { id } } },
+        });
+        return ctx.prisma.player.findOne({ where: { id } });
+      }
+
       const player = await ctx.prisma.player.create({
         data: {
           name: name,
+          salon: { connect: { id: salonId } },
         },
       });
 
-      await ctx.prisma.salon.update({
-        where: { id: salonId },
-        data: { players: { connect: { id: player.id } } },
-      });
       const token = jwt.sign(
         { name: player.name, id: player.id, time: new Date() },
         JWT_SECRET,
@@ -128,8 +155,13 @@ export const resolvers = {
     },
   },
   Salon: {
-    async players({ id }, _args, ctx: Context, _info) {
-      return await ctx.prisma.salon.findOne({ where: { id } }).players();
+    async players(parent, _args, ctx: Context, _info) {
+      const { token } = cookie.parse(ctx.req.headers.cookie ?? "");
+      const { id, name } = jwt.verify(token, JWT_SECRET);
+      const players = await ctx.prisma.salon
+        .findOne({ where: { id: parent.id } })
+        .players({ where: { NOT: { id } } });
+      return players.filter((p) => p.id !== id);
     },
   },
 };
