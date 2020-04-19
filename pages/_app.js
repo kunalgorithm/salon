@@ -27,19 +27,10 @@ class MyApp extends App {
                   <a>Home</a>
                 </Link>
               </Menu.Item>
-              <Menu.Item key="2">
-                <Link href="/login">
-                  <a>Log In</a>
-                </Link>
-              </Menu.Item>
-              <Menu.Item key="3">
-                <Link href="/signup">
-                  <a>Sign Up</a>
-                </Link>
-              </Menu.Item>
+
               <Menu.Item key="4">
                 <Link href="/signout">
-                  <a>Log Out</a>
+                  <a>Exit</a>
                 </Link>
               </Menu.Item>
             </Menu>

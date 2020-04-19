@@ -78,12 +78,6 @@ function SignIn() {
               Log In
             </Button>
           </div>
-
-          <div>
-            <Link href="/signup">
-              <a>Don't have an account? Sign Up</a>
-            </Link>
-          </div>
         </form>
       </Col>
     </Row>

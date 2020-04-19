@@ -17,12 +17,16 @@ const Page = ({ id }) => {
           id
           title
         }
+        me {
+          id
+          name
+        }
       }
     `,
     { variables: { id } }
   );
   if (loading) return <div>Loading...</div>;
-  if (!data)
+  if (!data || !data.salon)
     return (
       <div>
         <h3>This salon has expired or does not exist 🤔</h3>
@@ -36,7 +40,6 @@ const Page = ({ id }) => {
 };
 
 Page.getInitialProps = (ctx) => {
-  console.log(ctx.query);
   return { id: ctx.query.salon };
 };
 export default withApollo(Page);

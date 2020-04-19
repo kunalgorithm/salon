@@ -3,9 +3,9 @@ import gql from "graphql-tag";
 export const typeDefs = gql`
   type Player {
     id: ID!
-    email: String!
+    email: String
     name: String
-    password: String!
+    password: String
   }
 
   type Salon {
@@ -22,7 +22,7 @@ export const typeDefs = gql`
   }
 
   type Mutation {
-    signup(email: String!, name: String!, password: String!): Player!
+    signup(name: String!): Player!
     login(email: String!, password: String!): Player!
     signOut: Boolean!
     createSalon(title: String!): Salon!

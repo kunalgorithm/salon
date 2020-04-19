@@ -76,17 +76,30 @@ export const resolvers = {
       });
     },
     async signup(_parent, args, ctx: Context, _info): Promise<Player> {
-      const salt = bcrypt.genSaltSync();
-
-      const user = await ctx.prisma.player.create({
+      const player = await ctx.prisma.player.create({
         data: {
-          email: args.email,
           name: args.name,
-          password: bcrypt.hashSync(args.password, salt),
         },
       });
+      const token = jwt.sign(
+        { name: player.name, id: player.id, time: new Date() },
+        JWT_SECRET,
+        {
+          expiresIn: "6h",
+        }
+      );
 
-      return user;
+      ctx.res.setHeader(
+        "Set-Cookie",
+        cookie.serialize("token", token, {
+          httpOnly: true,
+          maxAge: 6 * 60 * 60,
+          path: "/",
+          sameSite: "lax",
+          secure: process.env.NODE_ENV === "production",
+        })
+      );
+      return player;
     },
 
     async login(

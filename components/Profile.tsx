@@ -14,7 +14,6 @@ const Profile = () => {
         me {
           id
           name
-          email
         }
       }
     `
@@ -23,30 +22,15 @@ const Profile = () => {
   if (!data || !data.me)
     return (
       <div>
-        <h1>You are not logged in.</h1>
-        <Link href="/login">
-          <a>Login</a>
-        </Link>{" "}
-        or{" "}
-        <Link href="/signup">
-          <a>Sign up</a>
-        </Link>
+        <h1>You have not joined yet.</h1>
       </div>
     );
   return (
     <div>
       <div>
-        <h1>Profile</h1>
+        <span>Joined as</span>
 
-        <div>
-          {data.me.name}
-          <br />
-          {data.me.email}
-          <br />
-          <Link href="/signout">
-            <Button onClick={() => {}}>Log Out</Button>
-          </Link>
-        </div>
+        <h1>{data.me.name}</h1>
       </div>
     </div>
   );
