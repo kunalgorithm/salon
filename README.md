@@ -1,20 +1,18 @@
-# GraphQL Fullstack Boilerplate
+# Salon
 
-A monorepo web application boilerplate with authentication, a graphQL api, database access, and material-ui styling. Visit the demo at https://graphql-fullstack.now.sh
+A 2D teleconferencing app.
 
-> UPDATE: The app now uses the [Prisma 2 Beta](https://www.prisma.io/blog/prisma-2-beta-b7bcl0gd8d8e/) for data access on SQLite and [Ant Design](https://ant.design) instead of material UI for styling. Consequently, the demo app no longer allows creating new accounts, and will require migration to a postgres or mysql database instance hosted in the cloud. Moreover, the dashboard no longer resembles the screenshot below. These will be updated soon.
+Bootstrapped from https://github.com/kunalgorithm/graphql-fullstack
 
-![Screenshot](static/screenshot.png)
-
-# But Why
+## Documentation
 
 When building a new project, choosing a technology stack, configuring it, wiring it all together, and figuring out how to dpeloy it properly tends to take far more time that building and shipping features (the important _and_ fun part). This boilerplate starts you off with an app that already works, so you can get right to the good stuff.
 
-# Features
+## Features
 
 ⚡️ Deploy a full-featured production-ready web application in less than 60 seconds.
 
-🔐 Allow users to sign up and log in with an email and password, view their profiles and data, and log out. Outputs feedback for loading and errors states to enhance UX. 
+🔐 Allow users to sign up and log in with an email and password, view their profiles and data, and log out. Outputs feedback for loading and errors states to enhance UX.
 
 📃 Includes a splash page, login page, sign up page, and dashboard.
 
@@ -22,15 +20,11 @@ When building a new project, choosing a technology stack, configuring it, wiring
 
 ☁️ [Zero Config Deployments](https://zeit.co/blog/zero-config). It just works 🔥
 
-# Quick Start
+## Quick Start
 
 Clone the repository
 
-```bash
-git clone https://github.com/kunalgorithm/graphql-fullstack
-```
-
-install dependencies, then run the development server:
+Install dependencies, then run the development server:
 
 ```bash
 yarn
@@ -109,11 +103,11 @@ model User {
 ```
 
 and run
-`npx prisma migrate save --name init --experimental`
+`yarn migrate:save`
 
-to save your first database migration. When asked whether to create a SQLite file, select yes. Then, apply the migration by running
+and give the migration a name to save your first database migration. When asked whether to create a SQLite file, select yes. Then, apply the migration by running
 
-`npx prisma migrate up --experimental`
+`yarn migrate:up`
 
 ### Adding a new field
 
@@ -161,11 +155,3 @@ const { loading, error, data, client } = useQuery(
   `
 );
 ```
-
-## Contributions welcome!
-
-Feel free to open an issue or submit a pull request 🙂
-
-## Need help?
-
-Send me a DM on twitter! [@kunalgorithm](https://twitter.com/kunalgorithm)
