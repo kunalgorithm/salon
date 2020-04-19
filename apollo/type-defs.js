@@ -15,9 +15,9 @@ export const typeDefs = gql`
 
   type Query {
     me: Player
-    player: Player
+    player(id: Float!): Player
     players: [Player!]!
-    salon: Salon
+    salon(id: String!): Salon
     salons: [Salon!]!
   }
 

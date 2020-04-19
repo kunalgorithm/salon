@@ -3,7 +3,7 @@ import React from "react";
 import Profile from "./Profile";
 import { Row, Col } from "antd";
 import Users from "./Users";
-import Posts from "./Posts";
+import Posts from "./CreateSalon";
 
 export default function Dashboard() {
   return (

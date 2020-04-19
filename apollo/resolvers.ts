@@ -45,11 +45,11 @@ export const resolvers = {
     },
     async player(
       _parent,
-      args: { email: string },
+      args: { id: number },
       ctx: Context,
       _info
     ): Promise<Player> {
-      return await ctx.prisma.player.findOne({ where: { email: args.email } });
+      return await ctx.prisma.player.findOne({ where: { id: args.id } });
     },
     async players(_parent, _args, ctx: Context, _info): Promise<Player[]> {
       return ctx.prisma.player.findMany({ orderBy: { createdAt: "desc" } });
