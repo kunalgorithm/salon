@@ -7,7 +7,9 @@ import { useRouter } from "next/router";
 
 const Profile = () => {
   const player_id =
-    typeof window !== "undefined" ? localStorage.getItem("player_id") : null;
+    typeof window !== "undefined"
+      ? JSON.parse(localStorage.getItem("salon"))
+      : null;
   const router = useRouter();
   const { loading, error, data, client } = useQuery(
     gql`
@@ -23,7 +25,7 @@ const Profile = () => {
         }
       }
     `,
-    { variables: { id: player_id, salonId: router.query.salon } }
+    { variables: { id: player_id.player_id, salonId: router.query.salon } }
   );
   // if (loading) return <div>Loading...</div>;
 

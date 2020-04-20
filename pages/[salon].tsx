@@ -29,6 +29,7 @@ const Page = ({ id }) => {
   // console.log(data);
   if (loading) return <div>Loading...</div>;
 
+  // todo
   // if (data && data.me && data.me.salonId !== id) {
   //   join({ variables: { salonId: id } });
   // }
