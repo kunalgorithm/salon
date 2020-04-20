@@ -1,30 +1,34 @@
 import React from "react";
 
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery, useSubscription } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import { withApollo } from "../apollo/client";
 
 export default () => {
-  const { loading, error, data } = useQuery(
+  const { loading, error, data } = useSubscription(
     gql`
-      query {
-        users {
-          email
-          name
+      subscription Salon {
+        salon(
+          where: { uuid: { _eq: "cd346224-ea0b-4608-a836-9e5009c07dd1" } }
+        ) {
+          players {
+            name
+          }
+          title
         }
       }
     `
   );
+  if (loading) return <div>loading...</div>;
+  if (error) return <div>Something went wrong...{JSON.stringify(error)}</div>;
   return (
     <div>
-      <h2>Users</h2>
+      <h2>Salon {data && data.salon && data.salon[0].title}</h2>
       <div>
         {data &&
-          data.users &&
-          data.users.map((user, i) => (
-            <div key={i}>
-              {user.name} - {user.email}
-            </div>
+          data.salon &&
+          data.salon[0].players.map((player, i) => (
+            <div key={i}>{player.name}</div>
           ))}
       </div>
     </div>

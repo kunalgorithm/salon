@@ -13,8 +13,10 @@ import { JOIN_MUTATION } from "../components/Join";
 const Page = ({ id }) => {
   const { loading, error, data, client } = useQuery(
     gql`
-      query salon($id: String!) {
-        salon(id: $id) {
+      query salon($uuid: String!) {
+        salon(
+          where: { uuid: { _eq: "cd346224-ea0b-4608-a836-9e5009c07dd1" } }
+        ) {
           id
           title
           players {
@@ -25,17 +27,17 @@ const Page = ({ id }) => {
             rotation
           }
         }
-        me {
-          id
-          name
-          x_position
-          y_position
-          rotation
-          salonId
-        }
+        # me {
+        #   id
+        #   name
+        #   x_position
+        #   y_position
+        #   rotation
+        #   salonId
+        # }
       }
     `,
-    { variables: { id }, pollInterval: 2500 }
+    { variables: { id } }
   );
   const [join] = useMutation(JOIN_MUTATION);
   if (loading) return <div>Loading...</div>;
