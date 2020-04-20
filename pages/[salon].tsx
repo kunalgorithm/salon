@@ -3,14 +3,14 @@ import Salon from "../components/Salon";
 
 import React from "react";
 
-import { useQuery, useMutation } from "@apollo/react-hooks";
+import { useQuery, useMutation, useSubscription } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import { JOIN_MUTATION } from "../components/Join";
 
 const Page = ({ id }) => {
-  const { loading, error, data, client } = useQuery(
+  const { loading, error, data } = useSubscription(
     gql`
-      query salon($id: uuid!) {
+      subscription salon($id: uuid!) {
         salon_by_pk(id: $id) {
           id
           title

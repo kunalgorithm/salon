@@ -22,26 +22,28 @@ export default ({
   const [player_id, setPlayerId] = useState(null);
   const speed = 3;
 
-  // const [move] = useMutation(
-  //   gql`
-  //     mutation move(
-  //       $player_id: Float!
-  //       $x_position: Float!
-  //       $y_position: Float!
+  const [move] = useMutation(
+    gql`
+      mutation move(
+        $player_id: Int!
+        $x_position: numeric!
+        $y_position: numeric!
+      ) {
+        update_player(
+          where: { id: { _eq: $player_id } }
+          _set: { x_position: $x_position, y_position: $y_position }
+        ) {
+          affected_rows
+          returning {
+            id
+            x_position
+            y_position
+          }
+        }
+      }
+    `
+  );
 
-  //     ) {
-  //       update_player(where: {id: {_eq: $$player_id}}, _set: {x_position: $x_position, y_position: $y_position}) {
-  //       affected_rows
-  //       returning {
-  //         id
-  //         x_position
-  //         y_position
-  //       }
-  //       }
-  //     }
-  //   `
-  // );
-  const move = (variables) => {};
   const handleKeyDown = (event) => {
     if (event.key === "ArrowRight")
       setPosition({
@@ -66,9 +68,9 @@ export default ({
 
     move({
       variables: {
+        player_id: player_id,
         x_position: position.x,
         y_position: position.y,
-        rotation: rotation,
       },
     });
   };
