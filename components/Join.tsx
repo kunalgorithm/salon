@@ -11,9 +11,12 @@ import { Input, Button, message, Row, Col } from "antd";
 import Field from "../components/Field";
 
 export const JOIN_MUTATION = gql`
-  mutation join($name: String, $salonId: String!) {
-    join(name: $name, salonId: $salonId) {
-      name
+  mutation join($name: String, $salonId: uuid!) {
+    insert_player(objects: { salon_id: $salonId, name: $name }) {
+      returning {
+        name
+        id
+      }
     }
   }
 `;
@@ -53,7 +56,12 @@ function Join() {
                 },
               });
 
-              if (result.data && result.data.signup) {
+              if (result.data && result.data.insert_player) {
+                console.log("join result,", result.data);
+                await localStorage.setItem(
+                  "player_id",
+                  result.data.insert_player.returning[0].id
+                );
                 await client.resetStore();
               }
             } catch (error) {

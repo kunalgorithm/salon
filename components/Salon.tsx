@@ -12,7 +12,7 @@ import { useState } from "react";
 export default ({
   data,
 }: {
-  data: { salon: Salon & { players: Player[] }; me: Player };
+  data: { salon_by_pk: Salon & { players: Player[] } };
 }) => {
   const [position, setPosition] = useState({
     x: 50,
@@ -21,26 +21,26 @@ export default ({
   const [rotation, setRotation] = useState(90);
   const speed = 3;
 
-  const [move] = useMutation(
-    gql`
-      mutation move(
-        $x_position: Float!
-        $y_position: Float!
-        $rotation: Float!
-      ) {
-        move(
-          x_position: $x_position
-          y_position: $y_position
-          rotation: $rotation
-        ) {
-          x_position
-          y_position
-          rotation
-        }
-      }
-    `
-  );
+  // const [move] = useMutation(
+  //   gql`
+  //     mutation move(
+  //       $player_id: Float!
+  //       $x_position: Float!
+  //       $y_position: Float!
 
+  //     ) {
+  //       update_player(where: {id: {_eq: $$player_id}}, _set: {x_position: $x_position, y_position: $y_position}) {
+  //       affected_rows
+  //       returning {
+  //         id
+  //         x_position
+  //         y_position
+  //       }
+  //       }
+  //     }
+  //   `
+  // );
+  const move = (variables) => {};
   const handleKeyDown = (event) => {
     if (event.key === "ArrowRight")
       setPosition({
@@ -71,11 +71,13 @@ export default ({
       },
     });
   };
+  const player_id =
+    typeof window !== "undefined" ? localStorage.getItem("player_id") : null;
 
   return (
     <>
-      <h2>Welcome to {data.salon.title}</h2>
-      {!data.me ? (
+      <h2>Welcome to {data.salon_by_pk.title}</h2>
+      {!player_id ? (
         <Join />
       ) : (
         <Row
@@ -99,7 +101,7 @@ export default ({
                 }}
                 rotate={rotation}
               />
-              {data.salon.players.map((player) => (
+              {data.salon_by_pk.players.map((player) => (
                 <Popover content={player.name} key={player.id}>
                   <UpCircleOutlined
                     style={{
@@ -121,7 +123,7 @@ export default ({
           </Col>
           <Col span={8}>
             <Row>
-              <Profile data={data} />
+              <Profile />
             </Row>
           </Col>
         </Row>

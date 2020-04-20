@@ -8,9 +8,7 @@ export default () => {
   const { loading, error, data } = useSubscription(
     gql`
       subscription Salon {
-        salon(
-          where: { uuid: { _eq: "cd346224-ea0b-4608-a836-9e5009c07dd1" } }
-        ) {
+        salon_by_pk(id: "cd346224-ea0b-4608-a836-9e5009c07dd1") {
           players {
             name
           }
