@@ -72,7 +72,9 @@ export default ({
     });
   };
   const player_id =
-    typeof window !== "undefined" ? localStorage.getItem("player_id") : null;
+    typeof window !== "undefined"
+      ? parseInt(localStorage.getItem("player_id"))
+      : null;
 
   return (
     <>
@@ -101,24 +103,26 @@ export default ({
                 }}
                 rotate={rotation}
               />
-              {data.salon_by_pk.players.map((player) => (
-                <Popover content={player.name} key={player.id}>
-                  <UpCircleOutlined
-                    style={{
-                      fontSize: "2em",
-                      position: "absolute",
-                      left: `${player.x_position}px`,
-                      top: `${player.y_position}px`,
-                      color:
-                        Math.abs(player.x_position - position.x) < 50 &&
-                        Math.abs(player.y_position - position.y) < 50
-                          ? "blue"
-                          : "slategray",
-                    }}
-                    rotate={player.rotation}
-                  />
-                </Popover>
-              ))}
+              {data.salon_by_pk.players
+                .filter((p) => p.id !== player_id)
+                .map((player) => (
+                  <Popover content={player.name} key={player.id}>
+                    <UpCircleOutlined
+                      style={{
+                        fontSize: "2em",
+                        position: "absolute",
+                        left: `${player.x_position}px`,
+                        top: `${player.y_position}px`,
+                        color:
+                          Math.abs(player.x_position - position.x) < 50 &&
+                          Math.abs(player.y_position - position.y) < 50
+                            ? "blue"
+                            : "slategray",
+                      }}
+                      rotate={player.rotation}
+                    />
+                  </Popover>
+                ))}
             </div>
           </Col>
           <Col span={8}>

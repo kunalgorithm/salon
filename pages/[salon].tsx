@@ -29,7 +29,7 @@ const Page = ({ id }) => {
     { variables: { id } }
   );
   const [join] = useMutation(JOIN_MUTATION);
-  console.log(data);
+  // console.log(data);
   if (loading) return <div>Loading...</div>;
 
   // if (data && data.me && data.me.salonId !== id) {
