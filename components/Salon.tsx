@@ -7,7 +7,7 @@ import Join from "./Join";
 import { Row, Col, Popover } from "antd";
 import Profile from "./Profile";
 import { UpCircleOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default ({
   data,
@@ -19,6 +19,7 @@ export default ({
     y: 100,
   });
   const [rotation, setRotation] = useState(90);
+  const [player_id, setPlayerId] = useState(null);
   const speed = 3;
 
   // const [move] = useMutation(
@@ -71,10 +72,11 @@ export default ({
       },
     });
   };
-  const player_id =
-    typeof window !== "undefined"
-      ? parseInt(localStorage.getItem("player_id"))
-      : null;
+
+  useEffect(() => {
+    if (typeof window !== "undefined")
+      setPlayerId(parseInt(localStorage.getItem("player_id")));
+  });
 
   return (
     <>

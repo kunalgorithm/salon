@@ -4,10 +4,7 @@ import Salon from "../components/Salon";
 import React from "react";
 
 import { useQuery, useMutation } from "@apollo/react-hooks";
-import { gql } from "apollo-boost";
-
-import { Input, Button } from "antd";
-import Link from "next/link";
+import gql from "graphql-tag";
 import { JOIN_MUTATION } from "../components/Join";
 
 const Page = ({ id }) => {
