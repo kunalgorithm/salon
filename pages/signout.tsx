@@ -13,15 +13,14 @@ const SignOutMutation = gql`
 function SignOut() {
   const client = useApolloClient();
   const router = useRouter();
-  const [signOut] = useMutation(SignOutMutation);
 
   React.useEffect(() => {
-    signOut().then(() => {
-      client.resetStore().then(() => {
-        router.push("/");
-      });
+    localStorage.removeItem("player_id");
+
+    client.resetStore().then(() => {
+      router.push("/");
     });
-  }, [signOut, router, client]);
+  }, [router, client]);
 
   return <p>Signing out...</p>;
 }

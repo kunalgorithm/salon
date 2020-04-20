@@ -59,9 +59,13 @@ function Join() {
               if (result.data && result.data.insert_player) {
                 console.log("join result,", result.data);
                 await localStorage.setItem(
-                  "player_id",
-                  result.data.insert_player.returning[0].id
+                  "salon",
+                  JSON.stringify({
+                    player_id: result.data.insert_player.returning[0].id,
+                    salon_id: router.query.salon as string,
+                  })
                 );
+
                 await client.resetStore();
               }
             } catch (error) {

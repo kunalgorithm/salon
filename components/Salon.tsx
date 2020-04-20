@@ -1,4 +1,3 @@
-import { Salon, Player } from "@prisma/client";
 import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 
@@ -9,11 +8,21 @@ import Profile from "./Profile";
 import { UpCircleOutlined } from "@ant-design/icons";
 import { useState, useEffect } from "react";
 import AwesomeDebouncePromise from "awesome-debounce-promise";
+import { useRouter } from "next/router";
 
 export default ({
   data,
 }: {
-  data: { salon_by_pk: Salon & { players: Player[] } };
+  data: {
+    salon_by_pk: { id: string; title: string } & {
+      players: {
+        id: number;
+        name: string;
+        x_position: number;
+        y_position: number;
+      }[];
+    };
+  };
 }) => {
   const [position, setPosition] = useState({
     x: 50,
@@ -86,10 +95,13 @@ export default ({
     //   500
     // );
   };
-
+  const router = useRouter();
   useEffect(() => {
-    if (typeof window !== "undefined")
-      setPlayerId(parseInt(localStorage.getItem("player_id")));
+    if (typeof window !== "undefined") {
+      const obj = JSON.parse(localStorage.getItem("salon"));
+      if (obj && obj.salon_id === router.query.salon)
+        setPlayerId(parseInt(obj.player_id));
+    }
   });
 
   return (
@@ -135,7 +147,6 @@ export default ({
                             ? "blue"
                             : "slategray",
                       }}
-                      rotate={player.rotation}
                     />
                   </Popover>
                 ))}

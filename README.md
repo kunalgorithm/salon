@@ -49,7 +49,7 @@ now
 
 # Tech stack
 
-🤖 [Typescript](https://www.typescriptlang.org) - static types, used throughout the client and server (especially handy for the auto-generated prisma2 client).
+🤖 [Typescript](https://www.typescriptlang.org) - static types, used throughout the client and server.
 
 🌚 [Next 9.3](https://github.com/zeit/next.js) - server-side rendering, file-based routing in the `pages` directory, and serverless build of of graphql API within `pages/api/graphql.ts` using [API Routes](https://github.com/zeit/next.js#api-routes).
 
