@@ -2,11 +2,7 @@ import React from "react";
 
 import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import { withApollo } from "../apollo/client";
 
-import { Input, Button } from "antd";
-import Link from "next/link";
-import { Salon, Player } from "@prisma/client";
 import { useRouter } from "next/router";
 
 const Profile = () => {

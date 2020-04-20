@@ -10,18 +10,13 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "now-build": "next build && prisma generate",
-    "start": "next start",
-    "generate": "prisma generate",
-    "migrate": "yarn migrate:save && yarn migrate:up && prisma generate",
-    "migrate:save": "prisma migrate save --experimental",
-    "migrate:up": "prisma migrate up --experimental"
+    "now-build": "next build",
+    "start": "next start"
   },
   "dependencies": {
     "@ant-design/icons": "^4.0.6",
     "@apollo/react-hooks": "^3.1.0",
     "@apollo/react-ssr": "^3.1.0",
-    "@prisma/client": "^2.0.0-beta.2",
     "antd": "^4.0.4",
     "apollo-cache-inmemory": "^1.6.5",
     "apollo-client": "^2.6.8",
@@ -52,7 +47,6 @@
     "ws": "^7.2.3"
   },
   "devDependencies": {
-    "@prisma/cli": "^2.0.0-beta.2",
     "@types/react": "^16.9.2",
     "tslint": "^5.19.0",
     "typescript": "^3.6.2"
