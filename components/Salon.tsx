@@ -8,6 +8,7 @@ import { Row, Col, Popover } from "antd";
 import Profile from "./Profile";
 import { UpCircleOutlined } from "@ant-design/icons";
 import { useState, useEffect } from "react";
+import AwesomeDebouncePromise from "awesome-debounce-promise";
 
 export default ({
   data,
@@ -73,6 +74,17 @@ export default ({
         y_position: position.y,
       },
     });
+    // AwesomeDebouncePromise(
+    //   () =>
+    //     move({
+    //       variables: {
+    //         player_id: player_id,
+    //         x_position: position.x,
+    //         y_position: position.y,
+    //       },
+    //     }),
+    //   500
+    // );
   };
 
   useEffect(() => {
