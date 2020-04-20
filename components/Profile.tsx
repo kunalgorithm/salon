@@ -25,7 +25,10 @@ const Profile = () => {
         }
       }
     `,
-    { variables: { id: player_id.player_id, salonId: router.query.salon } }
+    {
+      variables: { id: player_id.player_id, salonId: router.query.salon },
+      pollInterval: 2000,
+    }
   );
   // if (loading) return <div>Loading...</div>;
 
