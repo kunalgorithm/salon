@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import { useQuery, useMutation } from "@apollo/react-hooks";
-import { gql } from "apollo-boost";
+import gql from "graphql-tag";
 
 import Field from "./Field";
 import { useRouter } from "next/router";
@@ -12,9 +12,12 @@ export default () => {
   const router = useRouter();
   const [createSalon] = useMutation(gql`
     mutation createSalon($title: String!) {
-      createSalon(title: $title) {
-        id
-        title
+      insert_salon(objects: { title: $title }) {
+        returning {
+          id
+
+          title
+        }
       }
     }
   `);
@@ -30,7 +33,8 @@ export default () => {
 
           const result = await createSalon({ variables: { title: input } });
           if (result.data) {
-            router.push(`/${result.data.createSalon.id}`);
+            console.log(result.data);
+            router.push(`/${result.data.insert_salon.returning[0].id}`);
           } else {
             message.error(result.errors);
           }

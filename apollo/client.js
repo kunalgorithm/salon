@@ -4,7 +4,11 @@ import { ApolloProvider } from "@apollo/react-hooks";
 import { ApolloClient } from "apollo-client";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { onError } from "apollo-link-error";
-
+import fetch from "isomorphic-unfetch";
+import { WebSocketLink } from "apollo-link-ws";
+import { getMainDefinition } from "apollo-utilities";
+import ws from "isomorphic-ws";
+import { split } from "apollo-link";
 let globalApolloClient = null;
 
 /**
@@ -138,7 +142,7 @@ function createApolloClient(ctx = {}, initialState = {}) {
 }
 
 function createIsomorphLink(ctx) {
-  if (typeof window === "undefined") {
+  if (false) {
     const { SchemaLink } = require("apollo-link-schema");
     const { schema } = require("./schema");
     return new SchemaLink({ schema, context: ctx });
@@ -156,11 +160,38 @@ function createIsomorphLink(ctx) {
       if (networkError) console.log(`[Network error]: ${networkError}`);
     });
 
-    return errorLink.concat(
-      new HttpLink({
-        uri: "/api/graphql",
-        credentials: "same-origin",
-      })
+    const httpLink = new HttpLink({
+      uri: "https://hasura-pt9d.onrender.com/v1/graphql",
+      fetch,
+    });
+
+    const wsLink = new WebSocketLink({
+      uri: "wss://hasura-pt9d.onrender.com/v1/graphql",
+      webSocketImpl: ws,
+      // credentials: "same-origin",
+      options: {
+        reconnect: true,
+        connectionParams: {
+          authToken: "", //todo
+        },
+      },
+    });
+
+    // using the ability to split links, you can send data to each link
+    // depending on what kind of operation is being sent
+    const link = split(
+      // split based on operation type
+      ({ query }) => {
+        const definition = getMainDefinition(query);
+        return (
+          definition.kind === "OperationDefinition" &&
+          definition.operation === "subscription"
+        );
+      },
+      wsLink,
+      httpLink
     );
+
+    return errorLink.concat(link);
   }
 }

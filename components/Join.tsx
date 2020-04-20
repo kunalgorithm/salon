@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { useRouter } from "next/router";
 
-import { gql } from "apollo-boost";
+import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
 
 import { withApollo } from "../apollo/client";
@@ -11,9 +11,12 @@ import { Input, Button, message, Row, Col } from "antd";
 import Field from "../components/Field";
 
 export const JOIN_MUTATION = gql`
-  mutation join($name: String, $salonId: String!) {
-    join(name: $name, salonId: $salonId) {
-      name
+  mutation join($name: String, $salonId: uuid!) {
+    insert_player(objects: { salon_id: $salonId, name: $name }) {
+      returning {
+        name
+        id
+      }
     }
   }
 `;
@@ -53,7 +56,16 @@ function Join() {
                 },
               });
 
-              if (result.data && result.data.signup) {
+              if (result.data && result.data.insert_player) {
+                console.log("join result,", result.data);
+                await localStorage.setItem(
+                  "salon",
+                  JSON.stringify({
+                    player_id: result.data.insert_player.returning[0].id,
+                    salon_id: router.query.salon as string,
+                  })
+                );
+
                 await client.resetStore();
               }
             } catch (error) {

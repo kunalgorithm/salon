@@ -1,4 +1,3 @@
-import { Salon, Player } from "@prisma/client";
 import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 
@@ -7,35 +6,49 @@ import Join from "./Join";
 import { Row, Col, Popover } from "antd";
 import Profile from "./Profile";
 import { UpCircleOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import AwesomeDebouncePromise from "awesome-debounce-promise";
+import { useRouter } from "next/router";
 
 export default ({
   data,
 }: {
-  data: { salon: Salon & { players: Player[] }; me: Player };
+  data: {
+    salon_by_pk: { id: string; title: string } & {
+      players: {
+        id: number;
+        name: string;
+        x_position: number;
+        y_position: number;
+      }[];
+    };
+  };
 }) => {
   const [position, setPosition] = useState({
     x: 50,
     y: 100,
   });
   const [rotation, setRotation] = useState(90);
+  const [player_id, setPlayerId] = useState(null);
   const speed = 3;
 
   const [move] = useMutation(
     gql`
       mutation move(
-        $x_position: Float!
-        $y_position: Float!
-        $rotation: Float!
+        $player_id: Int!
+        $x_position: numeric!
+        $y_position: numeric!
       ) {
-        move(
-          x_position: $x_position
-          y_position: $y_position
-          rotation: $rotation
+        update_player(
+          where: { id: { _eq: $player_id } }
+          _set: { x_position: $x_position, y_position: $y_position }
         ) {
-          x_position
-          y_position
-          rotation
+          affected_rows
+          returning {
+            id
+            x_position
+            y_position
+          }
         }
       }
     `
@@ -65,17 +78,36 @@ export default ({
 
     move({
       variables: {
+        player_id: player_id,
         x_position: position.x,
         y_position: position.y,
-        rotation: rotation,
       },
     });
+    // AwesomeDebouncePromise(
+    //   () =>
+    //     move({
+    //       variables: {
+    //         player_id: player_id,
+    //         x_position: position.x,
+    //         y_position: position.y,
+    //       },
+    //     }),
+    //   500
+    // );
   };
+  const router = useRouter();
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const obj = JSON.parse(localStorage.getItem("salon"));
+      if (obj && obj.salon_id === router.query.salon)
+        setPlayerId(parseInt(obj.player_id));
+    }
+  });
 
   return (
     <>
-      <h2>Welcome to {data.salon.title}</h2>
-      {!data.me ? (
+      <h2>Welcome to {data.salon_by_pk.title}</h2>
+      {!player_id ? (
         <Join />
       ) : (
         <Row
@@ -99,29 +131,30 @@ export default ({
                 }}
                 rotate={rotation}
               />
-              {data.salon.players.map((player) => (
-                <Popover content={player.name} key={player.id}>
-                  <UpCircleOutlined
-                    style={{
-                      fontSize: "2em",
-                      position: "absolute",
-                      left: `${player.x_position}px`,
-                      top: `${player.y_position}px`,
-                      color:
-                        Math.abs(player.x_position - position.x) < 50 &&
-                        Math.abs(player.y_position - position.y) < 50
-                          ? "blue"
-                          : "slategray",
-                    }}
-                    rotate={player.rotation}
-                  />
-                </Popover>
-              ))}
+              {data.salon_by_pk.players
+                .filter((p) => p.id !== player_id)
+                .map((player) => (
+                  <Popover content={player.name} key={player.id}>
+                    <UpCircleOutlined
+                      style={{
+                        fontSize: "2em",
+                        position: "absolute",
+                        left: `${player.x_position}px`,
+                        top: `${player.y_position}px`,
+                        color:
+                          Math.abs(player.x_position - position.x) < 50 &&
+                          Math.abs(player.y_position - position.y) < 50
+                            ? "blue"
+                            : "slategray",
+                      }}
+                    />
+                  </Popover>
+                ))}
             </div>
           </Col>
           <Col span={8}>
             <Row>
-              <Profile data={data} />
+              <Profile />
             </Row>
           </Col>
         </Row>

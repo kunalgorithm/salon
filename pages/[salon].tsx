@@ -3,18 +3,15 @@ import Salon from "../components/Salon";
 
 import React from "react";
 
-import { useQuery, useMutation } from "@apollo/react-hooks";
-import { gql } from "apollo-boost";
-
-import { Input, Button } from "antd";
-import Link from "next/link";
+import { useQuery, useMutation, useSubscription } from "@apollo/react-hooks";
+import gql from "graphql-tag";
 import { JOIN_MUTATION } from "../components/Join";
 
 const Page = ({ id }) => {
-  const { loading, error, data, client } = useQuery(
+  const { loading, error, data } = useSubscription(
     gql`
-      query salon($id: String!) {
-        salon(id: $id) {
+      subscription salon($id: uuid!) {
+        salon_by_pk(id: $id) {
           id
           title
           players {
@@ -22,28 +19,21 @@ const Page = ({ id }) => {
             name
             x_position
             y_position
-            rotation
           }
-        }
-        me {
-          id
-          name
-          x_position
-          y_position
-          rotation
-          salonId
         }
       }
     `,
-    { variables: { id }, pollInterval: 2500 }
+    { variables: { id } }
   );
   const [join] = useMutation(JOIN_MUTATION);
+  // console.log(data);
   if (loading) return <div>Loading...</div>;
 
-  if (data && data.me && data.me.salonId !== id) {
-    join({ variables: { salonId: id } });
-  }
-  if (!data || !data.salon)
+  // todo
+  // if (data && data.me && data.me.salonId !== id) {
+  //   join({ variables: { salonId: id } });
+  // }
+  if (!data || !data.salon_by_pk)
     return (
       <div>
         <h3>This salon has expired or does not exist 🤔</h3>
