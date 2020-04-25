@@ -19,6 +19,7 @@ const Page = ({ id }) => {
             name
             x_position
             y_position
+            rotation
           }
         }
       }

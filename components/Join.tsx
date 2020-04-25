@@ -57,7 +57,6 @@ function Join() {
               });
 
               if (result.data && result.data.insert_player) {
-                console.log("join result,", result.data);
                 await localStorage.setItem(
                   "salon",
                   JSON.stringify({

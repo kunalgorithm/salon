@@ -20,6 +20,7 @@ export default ({
         name: string;
         x_position: number;
         y_position: number;
+        rotation: number;
       }[];
     };
   };
@@ -28,9 +29,10 @@ export default ({
     x: 50,
     y: 100,
   });
+
   const [rotation, setRotation] = useState(90);
   const [player_id, setPlayerId] = useState(null);
-  const speed = 3;
+  const speed = 4;
 
   const [move] = useMutation(
     gql`
@@ -38,16 +40,22 @@ export default ({
         $player_id: Int!
         $x_position: numeric!
         $y_position: numeric!
+        $rotation: numeric!
       ) {
         update_player(
           where: { id: { _eq: $player_id } }
-          _set: { x_position: $x_position, y_position: $y_position }
+          _set: {
+            x_position: $x_position
+            y_position: $y_position
+            rotation: $rotation
+          }
         ) {
           affected_rows
           returning {
             id
             x_position
             y_position
+            rotation
           }
         }
       }
@@ -55,25 +63,18 @@ export default ({
   );
 
   const handleKeyDown = (event) => {
-    if (event.key === "ArrowRight")
-      setPosition({
-        x: position.x + speed,
-        y: position.y,
-      });
-    else if (event.key === "ArrowLeft")
-      setPosition({
-        x: position.x - speed,
-        y: position.y,
-      });
+    if (event.key === "ArrowLeft") setRotation(rotation - 5);
+    if (event.key === "ArrowRight") setRotation(rotation + 5);
     if (event.key === "ArrowUp")
       setPosition({
-        x: position.x,
-        y: position.y - speed,
-      });
-    else if (event.key === "ArrowDown")
-      setPosition({
-        x: position.x,
-        y: position.y + speed,
+        x:
+          position.x + speed * Math.cos(((rotation - 90) * Math.PI) / 180) > 0
+            ? position.x + speed * Math.cos(((rotation - 90) * Math.PI) / 180)
+            : position.x,
+        y:
+          position.y + speed * Math.sin(((rotation - 90) * Math.PI) / 180) > 0
+            ? position.y + speed * Math.sin(((rotation - 90) * Math.PI) / 180)
+            : position.y,
       });
 
     move({
@@ -81,6 +82,7 @@ export default ({
         player_id: player_id,
         x_position: position.x,
         y_position: position.y,
+        rotation,
       },
     });
     // AwesomeDebouncePromise(
@@ -147,6 +149,7 @@ export default ({
                             ? "blue"
                             : "slategray",
                       }}
+                      rotate={player.rotation}
                     />
                   </Popover>
                 ))}

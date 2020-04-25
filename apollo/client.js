@@ -157,7 +157,7 @@ function createIsomorphLink(ctx) {
           )
         );
 
-      if (networkError) console.log(`[Network error]: ${networkError}`);
+      if (networkError) console.log(`[Network error]:`, networkError);
     });
 
     const httpLink = new HttpLink({

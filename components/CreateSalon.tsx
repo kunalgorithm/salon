@@ -5,12 +5,12 @@ import gql from "graphql-tag";
 
 import Field from "./Field";
 import { useRouter } from "next/router";
-import { message } from "antd";
+import { message, Button } from "antd";
 
 export default () => {
   const [input, setInput] = useState("");
   const router = useRouter();
-  const [createSalon] = useMutation(gql`
+  const [createSalon, { loading }] = useMutation(gql`
     mutation createSalon($title: String!) {
       insert_salon(objects: { title: $title }) {
         returning {
@@ -49,6 +49,9 @@ export default () => {
           value={input}
           onChange={(e) => setInput(e.target.value)}
         />
+        <Button htmlType="submit" type="default" loading={loading}>
+          Create
+        </Button>
       </form>
     </div>
   );

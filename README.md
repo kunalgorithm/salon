@@ -4,6 +4,19 @@ A 2D teleconferencing app.
 
 Bootstrapped from https://github.com/kunalgorithm/graphql-fullstack
 
+## Upcoming
+
+- speed
+- initials
+- arrows moves the page
+- move around on mobile - joystick
+- audio - haven't built before
+- make the movement faster
+- the ability to actually turn and move forward/back
+- mash two arrows & go diagonal
+- see radius of ability to speak
+- `transform-translate` is much more performance than `position: absolute`
+
 ## Documentation
 
 When building a new project, choosing a technology stack, configuring it, wiring it all together, and figuring out how to dpeloy it properly tends to take far more time that building and shipping features (the important _and_ fun part). This boilerplate starts you off with an app that already works, so you can get right to the good stuff.
