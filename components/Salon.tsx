@@ -63,6 +63,8 @@ export default ({
   );
 
   const handleKeyDown = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
     if (event.key === "ArrowLeft") setRotation(rotation - 5);
     if (event.key === "ArrowRight") setRotation(rotation + 5);
     if (event.key === "ArrowUp")

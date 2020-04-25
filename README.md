@@ -8,11 +8,8 @@ Bootstrapped from https://github.com/kunalgorithm/graphql-fullstack
 
 - speed
 - initials
-- arrows moves the page
 - move around on mobile - joystick
 - audio - haven't built before
-- make the movement faster
-- the ability to actually turn and move forward/back
 - mash two arrows & go diagonal
 - see radius of ability to speak
 - `transform-translate` is much more performance than `position: absolute`
