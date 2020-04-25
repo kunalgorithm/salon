@@ -6,6 +6,8 @@ Bootstrapped from https://github.com/kunalgorithm/graphql-fullstack
 
 ## Upcoming
 
+- Smooth the movement: 30 fps
+- two arrows at the same time .
 - speed
 - initials
 - move around on mobile - joystick

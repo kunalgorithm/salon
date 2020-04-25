@@ -163,6 +163,7 @@ function createIsomorphLink(ctx) {
     const httpLink = new HttpLink({
       uri: "https://hasura-pt9d.onrender.com/v1/graphql",
       fetch,
+      ssr: false, // TODO: temp
     });
 
     const wsLink = new WebSocketLink({

@@ -9,6 +9,9 @@ import { UpCircleOutlined } from "@ant-design/icons";
 import { useState, useEffect } from "react";
 import AwesomeDebouncePromise from "awesome-debounce-promise";
 import { useRouter } from "next/router";
+// import AudioWebRTC from "./AudioWebRTC";
+// import dynamic from "next/dynamic";
+// const AudioWebRTC = dynamic(() => import("./AudioWebRTC"));
 
 export default ({
   data,
@@ -32,7 +35,7 @@ export default ({
 
   const [rotation, setRotation] = useState(90);
   const [player_id, setPlayerId] = useState(null);
-  const speed = 4;
+  const speed = 10;
 
   const [move] = useMutation(
     gql`
@@ -65,8 +68,8 @@ export default ({
   const handleKeyDown = (event) => {
     event.preventDefault();
     event.stopPropagation();
-    if (event.key === "ArrowLeft") setRotation(rotation - 5);
-    if (event.key === "ArrowRight") setRotation(rotation + 5);
+    if (event.key === "ArrowLeft") setRotation(rotation - 9);
+    if (event.key === "ArrowRight") setRotation(rotation + 9);
     if (event.key === "ArrowUp")
       setPosition({
         x:
@@ -76,6 +79,17 @@ export default ({
         y:
           position.y + speed * Math.sin(((rotation - 90) * Math.PI) / 180) > 0
             ? position.y + speed * Math.sin(((rotation - 90) * Math.PI) / 180)
+            : position.y,
+      });
+    if (event.key === "ArrowDown")
+      setPosition({
+        x:
+          position.x - speed * Math.cos(((rotation - 90) * Math.PI) / 180) > 0
+            ? position.x - speed * Math.cos(((rotation - 90) * Math.PI) / 180)
+            : position.x,
+        y:
+          position.y - speed * Math.sin(((rotation - 90) * Math.PI) / 180) > 0
+            ? position.y - speed * Math.sin(((rotation - 90) * Math.PI) / 180)
             : position.y,
       });
 
@@ -160,6 +174,7 @@ export default ({
           <Col span={8}>
             <Row>
               <Profile />
+              {/* {typeof window !== "undefined" && <AudioWebRTC />} */}
             </Row>
           </Col>
         </Row>

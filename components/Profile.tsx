@@ -19,9 +19,13 @@ const Profile = () => {
           name
         }
 
-        player(where: { salon_id: { _eq: $salonId } }) {
+        player(
+          where: { salon_id: { _eq: $salonId } }
+          order_by: { createdAt: desc }
+        ) {
           id
           name
+          createdAt
         }
       }
     `,
@@ -34,13 +38,14 @@ const Profile = () => {
 
   if (!data || !data.player_by_pk) return null;
   return (
-    <div style={{ textAlign: "center", marginLeft: "20px" }}>
+    <div style={{ textAlign: "center", marginLeft: "50px" }}>
       <span>Joined as</span>
 
       <h1>{data.player_by_pk.name}</h1>
 
       <hr style={{ marginBottom: "20px" }} />
       <h2>Players</h2>
+      {/* TODO: order by createdAt with date */}
       {data.player &&
         data.player
           // .filter((p) => p.id !== parseInt(player_id))
