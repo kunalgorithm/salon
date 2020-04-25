@@ -18,7 +18,7 @@ export const JOIN_MUTATION = gql`
     }
   }
 `;
-function Join() {
+function Join({ setPlayerId }) {
   const router = useRouter();
 
   const [joinMutation, { loading, client }] = useMutation(JOIN_MUTATION);
@@ -53,15 +53,16 @@ function Join() {
               });
 
               if (result.data && result.data.insert_player) {
-                await localStorage.setItem(
+                localStorage.setItem(
                   "salon",
                   JSON.stringify({
                     player_id: result.data.insert_player.returning[0].id,
                     salon_id: router.query.salon as string,
                   })
                 );
-
-                await client.resetStore();
+                setPlayerId(
+                  parseInt(result.data.insert_player.returning[0].id)
+                );
               }
             } catch (error) {
               message.error(error.message);
@@ -74,6 +75,7 @@ function Join() {
             <Button htmlType="submit" type="default" loading={loading}>
               Join
             </Button>
+            {loading && "loading"}
           </div>
         </form>
       </Col>

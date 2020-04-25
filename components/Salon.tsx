@@ -149,7 +149,7 @@ export default ({
     <>
       <h2>Welcome to {data.salon_by_pk.title}</h2>
       {!player_id ? (
-        <Join />
+        <Join setPlayerId={setPlayerId} />
       ) : (
         <Row
           style={{ height: "70vh" }}

@@ -1,7 +1,9 @@
+// @ts-nocheck
 import React from "react";
 import App, { Container } from "next/app";
 import Head from "next/head";
 import Copyright from "../components/Copyright";
+import Exit from "../components/Exit";
 import { Layout, Menu } from "antd";
 import Link from "next/link";
 
@@ -24,14 +26,12 @@ class MyApp extends App {
             <Menu theme="dark" mode="horizontal" defaultSelectedKeys={[]}>
               <Menu.Item key="1">
                 <Link href="/">
-                  <a>Home</a>
+                  <a>Salon</a>
                 </Link>
               </Menu.Item>
 
               <Menu.Item key="4">
-                <Link href="/signout">
-                  <a>Exit</a>
-                </Link>
+                <Exit />
               </Menu.Item>
             </Menu>
           </Header>
