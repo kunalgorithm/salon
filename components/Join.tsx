@@ -1,13 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { useRouter } from "next/router";
 
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
 
-import { withApollo } from "../apollo/client";
-import Link from "next/link";
-import { Input, Button, message, Row, Col } from "antd";
+import { Button, message, Row, Col } from "antd";
 import Field from "../components/Field";
 
 export const JOIN_MUTATION = gql`
@@ -23,9 +21,7 @@ export const JOIN_MUTATION = gql`
 function Join() {
   const router = useRouter();
 
-  const [joinMutation, { loading, error, data, client }] = useMutation(
-    JOIN_MUTATION
-  );
+  const [joinMutation, { loading, client }] = useMutation(JOIN_MUTATION);
 
   return (
     <Row justify="center">

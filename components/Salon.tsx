@@ -9,6 +9,7 @@ import { UpCircleOutlined } from "@ant-design/icons";
 import { useState, useEffect } from "react";
 import AwesomeDebouncePromise from "awesome-debounce-promise";
 import { useRouter } from "next/router";
+import useInterval from "./useInterval";
 // import AudioWebRTC from "./AudioWebRTC";
 // import dynamic from "next/dynamic";
 // const AudioWebRTC = dynamic(() => import("./AudioWebRTC"));
@@ -35,7 +36,15 @@ export default ({
 
   const [rotation, setRotation] = useState(90);
   const [player_id, setPlayerId] = useState(null);
+  // const [keysDown, setKeysDown] = useState({"ArrowUp": false, "ArrowDown": false, "ArrowLeft": false, "ArrowRight": false,});
   const speed = 10;
+
+  const [keysDown, setKeysDown] = useState({
+    ArrowUp: false,
+    ArrowDown: false,
+    ArrowLeft: false,
+    ArrowRight: false,
+  });
 
   const [move] = useMutation(
     gql`
@@ -68,9 +77,24 @@ export default ({
   const handleKeyDown = (event) => {
     event.preventDefault();
     event.stopPropagation();
-    if (event.key === "ArrowLeft") setRotation(rotation - 9);
-    if (event.key === "ArrowRight") setRotation(rotation + 9);
-    if (event.key === "ArrowUp")
+    let newKeysDown = keysDown;
+    newKeysDown[event.key] = true;
+    setKeysDown(newKeysDown);
+  };
+
+  const handleKeyUp = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    let newKeysDown = keysDown;
+    newKeysDown[event.key] = false;
+    setKeysDown(newKeysDown);
+  };
+
+  const router = useRouter();
+  let nextTurnTO;
+  let networkTO;
+  useInterval(() => {
+    if (keysDown["ArrowUp"])
       setPosition({
         x:
           position.x + speed * Math.cos(((rotation - 90) * Math.PI) / 180) > 0
@@ -81,7 +105,8 @@ export default ({
             ? position.y + speed * Math.sin(((rotation - 90) * Math.PI) / 180)
             : position.y,
       });
-    if (event.key === "ArrowDown")
+
+    if (keysDown["ArrowDown"])
       setPosition({
         x:
           position.x - speed * Math.cos(((rotation - 90) * Math.PI) / 180) > 0
@@ -92,35 +117,33 @@ export default ({
             ? position.y - speed * Math.sin(((rotation - 90) * Math.PI) / 180)
             : position.y,
       });
+    if (keysDown["ArrowLeft"]) setRotation(rotation - 7);
+    if (keysDown["ArrowRight"]) setRotation(rotation + 7);
 
-    move({
-      variables: {
-        player_id: player_id,
-        x_position: position.x,
-        y_position: position.y,
-        rotation,
-      },
-    });
-    // AwesomeDebouncePromise(
-    //   () =>
-    //     move({
-    //       variables: {
-    //         player_id: player_id,
-    //         x_position: position.x,
-    //         y_position: position.y,
-    //       },
-    //     }),
-    //   500
-    // );
+    // nextTurnTO = setTimeout(nextTurn, 30);
+  }, 30);
+
+  let nextNetworkPush = () => {
+    // move({
+    //   variables: {
+    //     player_id: player_id,
+    //     x_position: position.x,
+    //     y_position: position.y,
+    //     rotation,
+    //   },
+    // });
+    networkTO = setTimeout(nextNetworkPush, 80);
   };
-  const router = useRouter();
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       const obj = JSON.parse(localStorage.getItem("salon"));
       if (obj && obj.salon_id === router.query.salon)
         setPlayerId(parseInt(obj.player_id));
     }
-  });
+    // nextTurn();
+    // nextNetworkPush();
+  }, []);
 
   return (
     <>
@@ -132,6 +155,7 @@ export default ({
           style={{ height: "70vh" }}
           tabIndex={0}
           onKeyDown={handleKeyDown}
+          onKeyUp={handleKeyUp}
           id="game"
         >
           <Col
