@@ -1,11 +1,12 @@
 import { withApollo } from "../apollo/client";
 import Salon from "../components/Salon";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import { useQuery, useMutation, useSubscription } from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import { JOIN_MUTATION } from "../components/Join";
+import Join, { JOIN_MUTATION } from "../components/Join";
+import { useRouter } from "next/router";
 
 const Page = ({ id }) => {
   const { loading, error, data } = useSubscription(
@@ -20,6 +21,7 @@ const Page = ({ id }) => {
             x_position
             y_position
             rotation
+            # updatedAt
           }
         }
       }
@@ -27,20 +29,33 @@ const Page = ({ id }) => {
     { variables: { id } }
   );
   const [join] = useMutation(JOIN_MUTATION);
-  // console.log(data);
+
+  const [player_id, setPlayerId] = useState(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const obj = JSON.parse(localStorage.getItem("salon"));
+      if (obj && obj.salon_id === router.query.salon)
+        setPlayerId(parseInt(obj.player_id));
+    }
+  }, []);
+
   if (loading) return <div>Loading...</div>;
 
-  // todo
-  // if (data && data.me && data.me.salonId !== id) {
-  //   join({ variables: { salonId: id } });
-  // }
   if (!data || !data.salon_by_pk)
     return (
       <div>
         <h3>This salon has expired or does not exist 🤔</h3>
       </div>
     );
-  return <Salon data={data} />;
+  return !player_id ? (
+    <div>
+      <Join setPlayerId={setPlayerId} salon={data.salon_by_pk} />
+    </div>
+  ) : (
+    <Salon data={data} player_id={player_id} setPlayerId={setPlayerId} />
+  );
 };
 
 Page.getInitialProps = (ctx) => {

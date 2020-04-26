@@ -14,20 +14,27 @@ import useInterval from "./useInterval";
 // import dynamic from "next/dynamic";
 // const AudioWebRTC = dynamic(() => import("./AudioWebRTC"));
 
+interface Player {
+  id: number;
+  name: string;
+  x_position: number;
+  y_position: number;
+  rotation: number;
+  updatedAt: Date;
+}
+
 export default ({
   data,
+  player_id,
+  setPlayerId,
 }: {
   data: {
     salon_by_pk: { id: string; title: string } & {
-      players: {
-        id: number;
-        name: string;
-        x_position: number;
-        y_position: number;
-        rotation: number;
-      }[];
+      players: Player[];
     };
   };
+  player_id: string | number;
+  setPlayerId: React.Dispatch<any>;
 }) => {
   const [position, setPosition] = useState({
     x: 50,
@@ -35,8 +42,7 @@ export default ({
   });
 
   const [rotation, setRotation] = useState(90);
-  const [player_id, setPlayerId] = useState(null);
-  // const [keysDown, setKeysDown] = useState({"ArrowUp": false, "ArrowDown": false, "ArrowLeft": false, "ArrowRight": false,});
+
   const speed = 10;
 
   const [keysDown, setKeysDown] = useState({
@@ -68,6 +74,7 @@ export default ({
             x_position
             y_position
             rotation
+            updatedAt
           }
         }
       }
@@ -119,38 +126,25 @@ export default ({
       });
     if (keysDown["ArrowLeft"]) setRotation(rotation - 7);
     if (keysDown["ArrowRight"]) setRotation(rotation + 7);
-
-    // nextTurnTO = setTimeout(nextTurn, 30);
   }, 30);
 
-  let nextNetworkPush = () => {
-    // move({
-    //   variables: {
-    //     player_id: player_id,
-    //     x_position: position.x,
-    //     y_position: position.y,
-    //     rotation,
-    //   },
-    // });
-    networkTO = setTimeout(nextNetworkPush, 80);
-  };
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const obj = JSON.parse(localStorage.getItem("salon"));
-      if (obj && obj.salon_id === router.query.salon)
-        setPlayerId(parseInt(obj.player_id));
-    }
-    // nextTurn();
-    // nextNetworkPush();
-  }, []);
+  useInterval(
+    () =>
+      move({
+        variables: {
+          player_id: player_id,
+          x_position: position.x,
+          y_position: position.y,
+          rotation,
+        },
+      }),
+    100
+  );
 
   return (
     <>
       <h2>Welcome to {data.salon_by_pk.title}</h2>
-      {!player_id ? (
-        <Join setPlayerId={setPlayerId} />
-      ) : (
+      {!player_id ? null : (
         <Row
           style={{ height: "70vh" }}
           tabIndex={0}

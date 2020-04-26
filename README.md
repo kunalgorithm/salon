@@ -3,6 +3,7 @@
 A 2D teleconferencing app.
 
 Bootstrapped from https://github.com/kunalgorithm/graphql-fullstack
+Hasura console: https://hasura-pt9d.onrender.com/console
 
 ## Upcoming
 

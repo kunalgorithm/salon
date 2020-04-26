@@ -18,7 +18,7 @@ export const JOIN_MUTATION = gql`
     }
   }
 `;
-function Join({ setPlayerId }) {
+function Join({ setPlayerId, salon }) {
   const router = useRouter();
 
   const [joinMutation, { loading, client }] = useMutation(JOIN_MUTATION);
@@ -26,7 +26,7 @@ function Join({ setPlayerId }) {
   return (
     <Row justify="center">
       <Col md={12} sm={18} xs={24}>
-        <h3>Enter your name to join</h3>
+        <h3>Enter your name to join {salon.title}</h3>
         <form
           noValidate
           onSubmit={async (e) => {
@@ -75,7 +75,6 @@ function Join({ setPlayerId }) {
             <Button htmlType="submit" type="default" loading={loading}>
               Join
             </Button>
-            {loading && "loading"}
           </div>
         </form>
       </Col>
