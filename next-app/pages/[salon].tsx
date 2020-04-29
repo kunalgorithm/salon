@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { withApollo } from "../apollo/client";
 import Salon from "../components/Salon";
 
