@@ -66,7 +66,6 @@ const PeerGrid: React.SFC<Props> = ({ roomAddress, activeSpeakerView }) => {
           />
         ) : (
           <div>
-            <div>grid placeholder</div>
             <Salon />
           </div>
           // <Placeholders.Consumer>

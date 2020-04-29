@@ -20,6 +20,9 @@ interface Player {
 }
 
 export default () => {
+  const salonHeight = 500;
+  const salonWidth = 500;
+
   const [position, setPosition] = useState({
     x: 250,
     y: 100,
@@ -57,36 +60,45 @@ export default () => {
   let nextTurnTO;
   let networkTO;
   useInterval(() => {
-    if (keysDown["ArrowUp"])
-      setPosition({
-        x:
-          position.x + speed * Math.cos(((rotation - 90) * Math.PI) / 180) > 0
-            ? position.x + speed * Math.cos(((rotation - 90) * Math.PI) / 180)
-            : position.x,
-        y:
-          position.y + speed * Math.sin(((rotation - 90) * Math.PI) / 180) > 0
-            ? position.y + speed * Math.sin(((rotation - 90) * Math.PI) / 180)
-            : position.y,
-      });
+    const xComponent = speed * Math.cos(((rotation - 90) * Math.PI) / 180);
+    const yComponent = speed * Math.sin(((rotation - 90) * Math.PI) / 180);
 
-    if (keysDown["ArrowDown"])
+    if (keysDown["ArrowUp"]) {
+      const newXPosition = position.x + xComponent;
+      const newYPosition = position.y + yComponent;
       setPosition({
         x:
-          position.x - speed * Math.cos(((rotation - 90) * Math.PI) / 180) > 0
-            ? position.x - speed * Math.cos(((rotation - 90) * Math.PI) / 180)
+          newXPosition > 0 && newXPosition < salonWidth
+            ? newXPosition
             : position.x,
         y:
-          position.y - speed * Math.sin(((rotation - 90) * Math.PI) / 180) > 0
-            ? position.y - speed * Math.sin(((rotation - 90) * Math.PI) / 180)
+          newYPosition > 0 && newYPosition < salonHeight
+            ? newYPosition
             : position.y,
       });
+    }
+
+    if (keysDown["ArrowDown"]) {
+      const newXPosition = position.x - xComponent;
+      const newYPosition = position.y - yComponent;
+      setPosition({
+        x:
+          newXPosition > 0 && newXPosition < salonWidth
+            ? newXPosition
+            : position.x,
+        y:
+          newYPosition > 0 && newYPosition < salonHeight
+            ? newYPosition
+            : position.y,
+      });
+    }
     if (keysDown["ArrowLeft"]) setRotation(rotation - 7);
     if (keysDown["ArrowRight"]) setRotation(rotation + 7);
   }, 30);
 
   return (
     <Row
-      style={{ height: "500px", width: "500px" }}
+      style={{ height: `${salonHeight}px`, width: `${salonWidth}px` }}
       tabIndex={0}
       onKeyDown={handleKeyDown}
       onKeyUp={handleKeyUp}

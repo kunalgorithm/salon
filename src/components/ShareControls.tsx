@@ -1,11 +1,11 @@
-import { LocalMediaList } from '@andyet/simplewebrtc';
-import React from 'react';
-import styled from 'styled-components';
-import { TalkyButton } from '../styles/button';
-import { colorToString } from '../utils/colorify';
+import { LocalMediaList } from "@andyet/simplewebrtc";
+import React from "react";
+import styled from "styled-components";
+import { TalkyButton } from "../styles/button";
+import { colorToString } from "../utils/colorify";
 
 const Container = styled.div({
-  textAlign: 'center'
+  textAlign: "center",
 });
 
 const JoinButton = styled(TalkyButton)`
@@ -44,7 +44,7 @@ const ShareControls: React.SFC = () => (
 
       return (
         <Container>
-          <JoinButton onClick={shareAll}>Join call</JoinButton>
+          <JoinButton onClick={shareAll}>Join</JoinButton>
         </Container>
       );
     }}
