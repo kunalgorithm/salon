@@ -9,6 +9,7 @@ import { UpCircleOutlined } from "@ant-design/icons";
 import { useState, useEffect } from "react";
 // import { useRouter } from "next/router";
 import useInterval from "./useInterval";
+import styled from "styled-components";
 
 interface Player {
   id: number;
@@ -97,27 +98,34 @@ export default () => {
   }, 30);
 
   return (
-    <Row
-      style={{ height: `${salonHeight}px`, width: `${salonWidth}px` }}
+    <Container
       tabIndex={0}
       onKeyDown={handleKeyDown}
       onKeyUp={handleKeyUp}
       id="game"
     >
-      <Col span={16} style={{ boxShadow: "1px 1px 13px 3px black" }} id="arena">
-        <div>
-          <UpCircleOutlined
-            style={{
-              fontSize: "2em",
-              position: "absolute",
-              left: `${position.x}px`,
-              top: `${position.y}px`,
-            }}
-            rotate={rotation}
-            translate={null}
-          />
-        </div>
-      </Col>
-    </Row>
+      <div>
+        <UpCircleOutlined
+          style={{
+            fontSize: "2em",
+            position: "relative",
+            left: `${position.x}px`,
+            top: `${position.y}px`,
+          }}
+          rotate={rotation}
+          translate={null}
+        />
+      </div>
+    </Container>
   );
 };
+
+const Container = styled.div`
+  display: flex;
+  flex: 1 1 0%;
+  background-color: #708090ad;
+  :focus {
+    outline: none;
+    background-color: transparent;
+  }
+`;

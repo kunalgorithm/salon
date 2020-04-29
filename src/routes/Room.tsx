@@ -6,52 +6,52 @@ import {
   LocalMediaList,
   Provider,
   RemoteAudioPlayer,
-  Room
-} from '@andyet/simplewebrtc';
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import styled from 'styled-components';
-import ChatContainer from '../components/ChatContainer';
-import ChatToggle from '../components/ChatToggle';
-import Haircheck from '../components/Haircheck';
-import PasswordEntry from '../components/PasswordEntry';
-import PeerGrid from '../components/PeerGrid';
-import Sidebar from '../components/Sidebar';
-import SimpleWebRTCBanner from '../components/SimpleWebRTCBanner';
-import SoundPlayer from '../components/SoundPlayer';
-import HiddenPeers from '../contexts/HiddenPeers';
-import mq from '../styles/media-queries';
+  Room,
+} from "@andyet/simplewebrtc";
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import styled from "styled-components";
+import ChatContainer from "../components/ChatContainer";
+import ChatToggle from "../components/ChatToggle";
+import Haircheck from "../components/Haircheck";
+import PasswordEntry from "../components/PasswordEntry";
+import PeerGrid from "../components/PeerGrid";
+import Sidebar from "../components/Sidebar";
+
+import SoundPlayer from "../components/SoundPlayer";
+import HiddenPeers from "../contexts/HiddenPeers";
+import mq from "../styles/media-queries";
 
 const PasswordEntryContainer = styled.div({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: '100vw',
-  height: '100vh'
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  width: "100vw",
+  height: "100vh",
 });
 
 const RootContainer = styled.div({
-  display: 'flex',
-  flexDirection: 'column',
-  minHeight: '100vh'
+  display: "flex",
+  flexDirection: "column",
+  minHeight: "100vh",
 });
 
 const Container = styled.div({
   flex: 1,
-  display: 'flex',
-  position: 'relative',
-  flexDirection: 'column',
+  display: "flex",
+  position: "relative",
+  flexDirection: "column",
   [mq.SMALL_DESKTOP]: {
-    flexDirection: 'row'
-  }
+    flexDirection: "row",
+  },
 });
 
 const LoadingState = styled.div({
-  width: '100vw',
-  height: '100vh',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center'
+  width: "100vw",
+  height: "100vh",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
 });
 
 interface Props {
@@ -80,7 +80,7 @@ class Index extends Component<Props, State> {
       pttMode: false,
       sendRtt: false,
       chatOpen: false,
-      hiddenPeers: []
+      hiddenPeers: [],
     };
   }
 
@@ -90,7 +90,7 @@ class Index extends Component<Props, State> {
         <LocalMediaList
           render={({ media }) => (
             <>
-              {media.filter(m => m.shared).length === 0 ? (
+              {media.filter((m) => m.shared).length === 0 ? (
                 <Haircheck />
               ) : (
                 <>
@@ -134,11 +134,10 @@ class Index extends Component<Props, State> {
                           <HiddenPeers.Provider
                             value={{
                               hiddenPeers: this.state.hiddenPeers,
-                              togglePeer: this.togglePeer
+                              togglePeer: this.togglePeer,
                             }}
                           >
                             <RootContainer>
-                              <SimpleWebRTCBanner />
                               <Container>
                                 <SoundPlayer roomAddress={room.address!} />
                                 <Sidebar
@@ -201,14 +200,14 @@ class Index extends Component<Props, State> {
   private togglePttMode = (e: React.SyntheticEvent) => {
     this.setState({ pttMode: !this.state.pttMode }, () => {
       if (this.state.pttMode) {
-        document.addEventListener('keydown', this.unmute);
-        document.addEventListener('keyup', this.mute);
-        window.addEventListener('blur', this.props.mute!);
+        document.addEventListener("keydown", this.unmute);
+        document.addEventListener("keyup", this.mute);
+        window.addEventListener("blur", this.props.mute!);
         this.props.mute!();
       } else {
-        document.removeEventListener('keydown', this.unmute);
-        document.removeEventListener('keyup', this.mute);
-        window.removeEventListener('blur', this.props.mute!);
+        document.removeEventListener("keydown", this.unmute);
+        document.removeEventListener("keyup", this.mute);
+        window.removeEventListener("blur", this.props.mute!);
         this.props.unmute!();
       }
     });
@@ -219,13 +218,13 @@ class Index extends Component<Props, State> {
   };
 
   private mute = (e: KeyboardEvent) => {
-    if (e.key === ' ') {
+    if (e.key === " ") {
       this.props.mute!();
     }
   };
 
   private unmute = (e: KeyboardEvent) => {
-    if (e.key === ' ') {
+    if (e.key === " ") {
       this.props.unmute!();
     }
   };
@@ -254,7 +253,7 @@ function mapDispatchToProps(dispatch: any, props: Props): Props {
   return {
     ...props,
     mute: () => dispatch(Actions.muteSelf()),
-    unmute: () => dispatch(Actions.unmuteSelf())
+    unmute: () => dispatch(Actions.unmuteSelf()),
   };
 }
 
