@@ -1,11 +1,16 @@
-import React, { Component } from 'react';
-import styled, { createGlobalStyle } from 'styled-components';
-import ThemeProvider from './components/ThemeProvider';
-import Placeholders from './contexts/Placeholders';
-import Room from './routes/Room';
-import { PlaceholderGenerator } from './types';
-import { colorToString, darken } from './utils/colorify';
+import React, { Component } from "react";
+import styled, { createGlobalStyle } from "styled-components";
+import ThemeProvider from "./components/ThemeProvider";
+import Placeholders from "./contexts/Placeholders";
+import Room from "./routes/Room";
+import { PlaceholderGenerator } from "./types";
+import { colorToString, darken } from "./utils/colorify";
+import ApolloClient from "apollo-boost";
+import { ApolloProvider } from "@apollo/react-hooks";
 
+const client = new ApolloClient({
+  uri: "https://api.salon.kunal.sh/v1/graphql",
+});
 const Container = styled.div`
   height: 100vh;
   width: 100vw;
@@ -77,47 +82,49 @@ class App extends Component<Props> {
       gridPlaceholder,
       haircheckHeaderPlaceholder,
       emptyRosterPlaceholder,
-      homepagePlaceholder
+      homepagePlaceholder,
     } = this.props;
     return (
-      <ThemeProvider>
-        <Placeholders.Provider
-          value={{
-            gridPlaceholder,
-            haircheckHeaderPlaceholder,
-            emptyRosterPlaceholder,
-            homepagePlaceholder
-          }}
-        >
-          <div>
-            <GlobalStyle />
-            <Container>
-              {roomName ? (
-                <Room
-                  name={roomName}
-                  configUrl={configUrl}
-                  userData={userData}
-                />
-              ) : (
-                <div
-                  ref={node => {
-                    if (
-                      node &&
-                      homepagePlaceholder &&
-                      node.childElementCount === 0
-                    ) {
-                      const el = homepagePlaceholder();
-                      if (el) {
-                        node.appendChild(el);
+      <ApolloProvider client={client}>
+        <ThemeProvider>
+          <Placeholders.Provider
+            value={{
+              gridPlaceholder,
+              haircheckHeaderPlaceholder,
+              emptyRosterPlaceholder,
+              homepagePlaceholder,
+            }}
+          >
+            <div>
+              <GlobalStyle />
+              <Container>
+                {roomName ? (
+                  <Room
+                    name={roomName}
+                    configUrl={configUrl}
+                    userData={userData}
+                  />
+                ) : (
+                  <div
+                    ref={(node) => {
+                      if (
+                        node &&
+                        homepagePlaceholder &&
+                        node.childElementCount === 0
+                      ) {
+                        const el = homepagePlaceholder();
+                        if (el) {
+                          node.appendChild(el);
+                        }
                       }
-                    }
-                  }}
-                />
-              )}
-            </Container>
-          </div>
-        </Placeholders.Provider>
-      </ThemeProvider>
+                    }}
+                  />
+                )}
+              </Container>
+            </div>
+          </Placeholders.Provider>
+        </ThemeProvider>
+      </ApolloProvider>
     );
   }
 }

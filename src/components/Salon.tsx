@@ -113,7 +113,7 @@ export default () => {
             top: `${position.y}px`,
           }}
           rotate={rotation}
-          translate={null}
+          translate={"no"}
         />
       </div>
     </Container>

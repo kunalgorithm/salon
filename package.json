@@ -10,6 +10,7 @@
   "dependencies": {
     "@andyet/simplewebrtc": "^1.14.4",
     "@ant-design/icons": "^4.1.0",
+    "@apollo/react-hooks": "^3.1.5",
     "@types/jest": "^24.0.9",
     "@types/lodash-es": "^4.17.2",
     "@types/react": "^16.8.6",
@@ -19,8 +20,10 @@
     "@types/react-router-dom": "^4.3.1",
     "@types/styled-components": "^4.1.11",
     "antd": "^4.2.0",
+    "apollo-boost": "^0.4.7",
     "awesome-typescript-loader": "^5.2.1",
     "braces": "^2.3.2",
+    "graphql": "^15.0.0",
     "html-webpack-plugin": "^3.2.0",
     "lodash-es": "^4.17.11",
     "material-icons-svg": "^1.0.0",

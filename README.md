@@ -3,7 +3,7 @@
 https://salon.kunal.sh
 A 2D teleconferencing app.
 
-Hasura console: https://hasura-pt9d.onrender.com/console
+Hasura console: https://api.salon.kunal.sh/console
 
 To get started, you will first need to edit `public/index.html` to set your API key.
 
@@ -20,12 +20,9 @@ You can retrieve your API key by visiting [https://accounts.simplewebrtc.com](ht
 
 ## Upcoming
 
-- Smooth the movement: 30 fps
-- two arrows at the same time .
-- speed
-- initials
-- move around on mobile - joystick
-- audio - haven't built before
-- mash two arrows & go diagonal
-- see radius of ability to speak
-- `transform-translate` is much more performance than `position: absolute`
+- Video for each person hovers above their icon, and dissapears when out of proximity
+
+* initials in each player's icon. copy over mutations from master.
+* move around on mobile - joystick
+
+* `transform-translate` is much more performance than `position: absolute`

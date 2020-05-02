@@ -21,6 +21,7 @@ import Sidebar from "../components/Sidebar";
 import SoundPlayer from "../components/SoundPlayer";
 import HiddenPeers from "../contexts/HiddenPeers";
 import mq from "../styles/media-queries";
+import { gql } from "apollo-boost";
 
 const PasswordEntryContainer = styled.div({
   display: "flex",
@@ -257,7 +258,4 @@ function mapDispatchToProps(dispatch: any, props: Props): Props {
   };
 }
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(Index);
+export default connect(null, mapDispatchToProps)(Index);
