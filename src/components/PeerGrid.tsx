@@ -52,7 +52,8 @@ const PeerGrid: React.SFC<Props> = ({ roomAddress, activeSpeakerView }) => {
       room={roomAddress}
       render={({ peers }) => {
         const visiblePeers = peers.filter((p) => !hiddenPeers.includes(p.id));
-        return visiblePeers.length > 0 || activeSpeakerView ? (
+        // return visiblePeers.length > 0 || activeSpeakerView ? (
+        return false ? (
           <StyledGridLayout
             items={visiblePeers}
             renderCell={(peer: Peer) => (
