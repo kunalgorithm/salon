@@ -10,7 +10,7 @@ import { useState, useEffect } from "react";
 // import { useRouter } from "next/router";
 import useInterval from "./useInterval";
 import styled from "styled-components";
-import { useQuery, useMutation } from "@apollo/react-hooks";
+import { useQuery, useMutation, useSubscription } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 
 interface Player {
@@ -30,9 +30,9 @@ export default () => {
   const player_id = localStorage.getItem("player_id")
     ? parseInt(localStorage.getItem("player_id")!)
     : undefined;
-  const { data } = useQuery(
+  const { data } = useSubscription(
     gql`
-      query salon_by_pk($id: String!) {
+      subscription salon_by_pk($id: String!) {
         salon_by_pk(id: $id) {
           players {
             id
@@ -45,7 +45,7 @@ export default () => {
         }
       }
     `,
-    { variables: { id: salon_id }, pollInterval: 1000 }
+    { variables: { id: salon_id } }
   );
 
   const [move] = useMutation(

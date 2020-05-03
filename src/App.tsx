@@ -5,11 +5,39 @@ import Placeholders from "./contexts/Placeholders";
 import Room from "./routes/Room";
 import { PlaceholderGenerator } from "./types";
 import { colorToString, darken } from "./utils/colorify";
-import ApolloClient from "apollo-boost";
+import { ApolloClient } from "apollo-client";
 import { ApolloProvider } from "@apollo/react-hooks";
+import { WebSocketLink } from "apollo-link-ws";
+import { InMemoryCache } from "apollo-cache-inmemory";
+import { getMainDefinition } from "apollo-utilities";
+import { split } from "apollo-link";
+import { HttpLink } from "apollo-link-http";
+
+const wsLink = new WebSocketLink({
+  uri: `wss://api.salon.kunal.sh/v1/graphql`,
+  options: {
+    reconnect: true,
+  },
+});
+const httpLink = new HttpLink({
+  uri: "https://api.salon.kunal.sh/v1/graphql",
+});
+const link = split(
+  // split based on operation type
+  ({ query }) => {
+    const definition = getMainDefinition(query);
+    return (
+      definition.kind === "OperationDefinition" &&
+      definition.operation === "subscription"
+    );
+  },
+  wsLink,
+  httpLink
+);
 
 const client = new ApolloClient({
-  uri: "https://api.salon.kunal.sh/v1/graphql",
+  cache: new InMemoryCache(),
+  link,
 });
 const Container = styled.div`
   height: 100vh;
