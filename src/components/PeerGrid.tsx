@@ -60,6 +60,7 @@ const PeerGrid: React.SFC<Props> = ({ roomAddress, activeSpeakerView }) => {
               <RemoteMediaList
                 peer={peer.address}
                 render={({ media }) => (
+                  // TODO: this is where peer's videos are rendered
                   <PeerGridItem media={media} peer={peer} />
                 )}
               />
