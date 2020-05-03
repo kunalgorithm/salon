@@ -199,6 +199,7 @@ export default () => {
                         : "slategray",
                   }}
                   rotate={player.rotation}
+                  translate={"no"}
                 />
               </Popover>
             ))}
